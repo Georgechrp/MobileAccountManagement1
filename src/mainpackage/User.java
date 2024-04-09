@@ -1,3 +1,5 @@
+package mainpackage;
+
 public class User {
     // static μετρητής χρηστών
     private static int usersCounter = 0;

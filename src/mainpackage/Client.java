@@ -1,3 +1,5 @@
+package mainpackage;
+
 import java.util.ArrayList;
 
 public class Client extends User {
@@ -47,7 +49,7 @@ public class Client extends User {
     }
 
     // Υποθέτουμε ότι η υποκλάση PhoneNumber είναι η εξής:
-     public class PhoneNumber {
+     public static class PhoneNumber {
          private String number;
 
          public PhoneNumber(String number) {
