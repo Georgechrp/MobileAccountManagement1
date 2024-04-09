@@ -3,9 +3,9 @@ public class Main {
         User user1 = new User("Georgechrp",
                 "George", "Christopoulos", "Client");
         User user2 = new User("talepis",
-                "Eyt8imios", "alepis", "seller");
+                "Eythimios", "alepis", "seller");
 
-        user2.setUsername("Talepisss");
+
         System.out.println(user2.getUsername());
     }
 }

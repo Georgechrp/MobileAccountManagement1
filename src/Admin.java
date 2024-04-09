@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Admin extends User{
-    private ArrayList<Seller> sellers;
-    private ArrayList<User> users;
+    private ArrayList<Seller> sellers;//πωλητές που διαχειρίζεται ο διαχειριστής
+    private ArrayList<User> users;//όλοι οι χρήστες του συστήματος
 
     public Admin(String username, String name, String surname, String role) {
         super(username, name, surname, role);
