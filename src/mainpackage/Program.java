@@ -1,3 +1,5 @@
+package mainpackage;
+
 public class Program {
     private String name;//το όνομα του προγράμματος
     private int minutes;// τα λεπτά ομιλίας που προσφέρονται
