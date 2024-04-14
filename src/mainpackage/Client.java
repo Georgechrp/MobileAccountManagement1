@@ -15,6 +15,7 @@ public class Client extends User {
         this.callHistory = new ArrayList<>();
 
     }
+
     public String getAFM() {
         return AFM;
     }
@@ -47,19 +48,6 @@ public class Client extends User {
         System.out.println("ΑΦΜ: " + AFM);
         System.out.println("Τηλέφωνο: " + phoneNumber.getNumber());
     }
-
-    // Υποθέτουμε ότι η υποκλάση PhoneNumber είναι η εξής:
-     public static class PhoneNumber {
-         private String number;
-
-         public PhoneNumber(String number) {
-             this.number = number;
-         }
-
-         public String getNumber() {
-             return number;
-         }
-     }
 
     // Εμφάνιση λογαριασμού
     public void displayAccount() {
