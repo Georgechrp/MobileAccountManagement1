@@ -1,4 +1,6 @@
-package mainpackage;
+package mainpackage.users;
+
+import mainpackage.utils.PhoneNumber;
 
 import java.util.ArrayList;
 

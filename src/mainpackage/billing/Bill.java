@@ -1,4 +1,7 @@
-package mainpackage;
+package mainpackage.billing;
+
+import mainpackage.calls.Call;
+import mainpackage.utils.PhoneNumber;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package mainpackage;
+package mainpackage.users;
 
 import java.util.ArrayList;
 
@@ -51,5 +51,6 @@ public class Admin extends User{
     // Μέθοδος για τη δημιουργία νέου προγράμματος
     public void createProgram(String programName) {
         System.out.println("Δημιουργήθηκε νέο πρόγραμμα: " + programName);
+
     }
 }

@@ -1,4 +1,4 @@
-package mainpackage;
+package mainpackage.users;
 
 public class User {
     // static μετρητής χρηστών

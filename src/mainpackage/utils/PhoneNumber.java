@@ -1,4 +1,6 @@
-package mainpackage;
+package mainpackage.utils;
+
+import mainpackage.program.Program;
 
 public class PhoneNumber {
     private String number; //ο μοναδικός αριθμός τηλεφώνου

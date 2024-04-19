@@ -1,4 +1,4 @@
-package mainpackage;
+package mainpackage.program;
 
 public class Program {
     private String name;//το όνομα του προγράμματος

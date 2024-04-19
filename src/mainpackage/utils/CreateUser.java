@@ -1,4 +1,9 @@
-package mainpackage;
+package mainpackage.utils;
+
+import mainpackage.program.Program;
+import mainpackage.users.Admin;
+import mainpackage.users.Client;
+import mainpackage.users.Seller;
 
 public class CreateUser {
     public static void main(String[] args) {
