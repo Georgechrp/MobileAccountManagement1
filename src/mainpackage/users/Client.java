@@ -1,5 +1,6 @@
 package mainpackage.users;
 
+import mainpackage.calls.Call;
 import mainpackage.utils.PhoneNumber;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ public class Client extends User {
     private final String AFM;
     private PhoneNumber phoneNumber;
     private double balance;
-    private ArrayList<String> callHistory;
+    private ArrayList<Call> callHistory;
     public Client(String username, String name, String surname, String role, String AFM, PhoneNumber phoneNumber) {
         super(username, name, surname, role);
         this.AFM = AFM;
@@ -37,11 +38,11 @@ public class Client extends User {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-    public ArrayList<String> getCallHistory() {
+    public ArrayList<Call> getCallHistory() {
         return callHistory;
     }
     // Προσθήκη ενός τηλεφωνικού κλήση στο ιστορικό
-    public void addCall(String callDetails) {
+    public void addCall(Call callDetails) {
         callHistory.add(callDetails);
     }
     @Override
@@ -62,7 +63,7 @@ public class Client extends User {
     // Εκτύπωση του ιστορικού των κλήσεων
     public void displayCallHistory() {
         System.out.println("Ιστορικό κλήσεων:");
-        for (String call : callHistory) {
+        for (Call call : callHistory) {
             System.out.println(call);
         }
     }

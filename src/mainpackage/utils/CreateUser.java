@@ -1,9 +1,15 @@
 package mainpackage.utils;
 
+import mainpackage.calls.Call;
 import mainpackage.program.Program;
 import mainpackage.users.Admin;
 import mainpackage.users.Client;
 import mainpackage.users.Seller;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class CreateUser {
     public static void main(String[] args) {
@@ -13,6 +19,15 @@ public class CreateUser {
 
         PhoneNumber phoneNumber1 = new PhoneNumber("6939591919", program1);
         PhoneNumber phoneNumber2 = new PhoneNumber("6946469044", program2);
+        PhoneNumber phoneNumber3 = new PhoneNumber("6946395044", program3);
+
+
+        LocalDate date1 = LocalDate.of(2000, 10, 23);
+        LocalTime time1 = LocalTime.of(12, 20, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(date1, time1);
+        LocalDate date2 = LocalDate.of(2000, 10, 23);
+        LocalTime time2 = LocalTime.of(13, 20, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(date2, time2);
 
         Client client1= new Client("FoivosD", "Foivos", "Delivorias", "client", "174590134", phoneNumber1);
         client1.register();
@@ -30,6 +45,32 @@ public class CreateUser {
 
         Admin admin = new Admin("Georgechrp", "George", "Christopoulos", "Admin");
         admin.createSeller("Basilis40", "Basilis", "Tsitsanis", "Wind");
+        admin.createClient("Stelios563", "Stelios", "Stauros", "client", "175837492", phoneNumber3);
+
+        Call call1 = new Call(phoneNumber1.getNumber(), phoneNumber2.getNumber(), localDateTime1, localDateTime2);
+
+        client1.addCall(call1);
+
+
+
+        ArrayList<Client> obj1 = admin.getClients();
+        obj1.get(0).addCall(call1);
+        admin.setClients(obj1);
+
+        admin.deleteClient(admin.getClients().get(0));
+        admin.deleteSeller(admin.getSellers().get(0));
+
+        admin.callProgram(program1);
+
+        try {
+            ArrayList<Seller> Sel = admin.getSellers();
+            System.out.println("Name of fifth seller : " + Sel.get(5).getName());
+        }catch(IndexOutOfBoundsException e)
+        {
+            System.out.println("Error");
+            e.printStackTrace();
+        }
+
 
     }
 }
