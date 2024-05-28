@@ -8,6 +8,7 @@ public class User {
     private String username;
     private String name;
     private String surname;
+    private String password;
     private String role; // Ιδιότητα: client, seller, administrator
 
     // Constructor της κλάσης Users
@@ -48,7 +49,15 @@ public class User {
         this.surname = surname;
     }
 
-    public String getRole() {
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
         return role;
     }
 
