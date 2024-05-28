@@ -12,11 +12,12 @@ public class User {
     private String role; // Ιδιότητα: client, seller, administrator
 
     // Constructor της κλάσης Users
-    public User(String username, String name, String surname, String role) {
-        this.username = username;
-        this.name = name;
-        this.surname = surname;
-        this.role = role;
+    public User(String username, String name, String surname, String password, String role) {
+        setUsername(username);
+        setName(name);
+        setSurname(surname);
+        setRole(role);
+        setPassword(password);
         // Αύξηση του μετρητή κατά ένα κάθε φορά που καλείται ο constructor
         usersCounter++;
     }
