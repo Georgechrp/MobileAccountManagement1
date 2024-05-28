@@ -3,10 +3,10 @@ package mainpackage.calls.model;
 import java.time.LocalDateTime;
 
 public class Call {
-    private String callerPhoneNumber; //ο αριθμός τηλεφώνου του καλούντα
-    private String receiverPhoneNumber;//ο αριθμός τηλεφώνου του καλούμενου
-    private LocalDateTime startTime;// ώρα έναρξης της κλήσης
-    private LocalDateTime endTime;// ώρα λήξης της κλήσης.
+    private final String callerPhoneNumber; //ο αριθμός τηλεφώνου του καλούντα
+    private final String receiverPhoneNumber;//ο αριθμός τηλεφώνου του καλούμενου
+    private final LocalDateTime startTime;// ώρα έναρξης της κλήσης
+    private final LocalDateTime endTime;// ώρα λήξης της κλήσης.
 
     public Call(String callerPhoneNumber, String receiverPhoneNumber, LocalDateTime startTime, LocalDateTime endTime) {
         this.callerPhoneNumber = callerPhoneNumber;
@@ -19,31 +19,15 @@ public class Call {
         return callerPhoneNumber;
     }
 
-    public void setCallerPhoneNumber(String callerPhoneNumber) {
-        this.callerPhoneNumber = callerPhoneNumber;
-    }
-
     public String getReceiverPhoneNumber() {
         return receiverPhoneNumber;
-    }
-
-    public void setReceiverPhoneNumber(String receiverPhoneNumber) {
-        this.receiverPhoneNumber = receiverPhoneNumber;
     }
 
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public LocalDateTime getEndTime() {
         return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 }

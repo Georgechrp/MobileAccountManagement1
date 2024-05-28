@@ -1,16 +1,18 @@
 package mainpackage.program.model;
 
 public class Program {
+	private int id;
     private String name;//το όνομα του προγράμματος
     private int minutes;// τα λεπτά ομιλίας που προσφέρονται
     private double baseCharge;//το πάγιο κόστος του προγράμματος
     private double additionalCharge;//το επιπλέον κόστος για χρέωση πέραν του παγίου.
 
-    public Program(String name, int minutes, double baseCharge, double additionalCharge) {
-        this.name = name;
-        this.minutes = minutes;
-        this.baseCharge = baseCharge;
-        this.additionalCharge = additionalCharge;
+    public Program(int id, String name, int minutes, double baseCharge, double additionalCharge) {
+        setId(id);
+        setName(name);
+        setMinutes(minutes);
+        setBaseCharge(baseCharge);
+        setAdditionalCharge(additionalCharge);
     }
 
     public String getName() {
@@ -44,5 +46,13 @@ public class Program {
     public void setAdditionalCharge(double additionalCharge) {
         this.additionalCharge = additionalCharge;
     }
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 }

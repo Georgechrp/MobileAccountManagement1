@@ -1,19 +1,16 @@
 package mainpackage.billing.model;
 
-import mainpackage.calls.model.Call;
 import mainpackage.utils.model.PhoneNumber;
 
-import java.util.ArrayList;
-import java.util.List;
 public class Bill {
+	private String usernameOfClient;
     private String billingMonth; // ο μήνας χρέωσης
     private PhoneNumber phoneNumber;
-    private List<Call> calls;//μια λίστα με τις κλήσεις που αντιστοιχούν στον συγκεκριμένο αριθμό τηλεφώνου για τον συγκεκριμένο μήνα χρέωσης.
-
-    public Bill(String billingMonth, PhoneNumber phoneNumber) {
-        this.billingMonth = billingMonth;
-        this.phoneNumber = phoneNumber;
-        this.calls = new ArrayList<>();
+    
+    public Bill(String usernameOfClient, String billingMonth, PhoneNumber phoneNumber) {
+    	setUsernameOfClient(usernameOfClient);
+    	setBillingMonth(billingMonth);
+    	setPhoneNumber(phoneNumber);
     }
 
     public String getBillingMonth() {
@@ -32,13 +29,13 @@ public class Bill {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Call> getCalls() {
-        return calls;
-    }
+	public String getUsernameOfClient() {
+		return usernameOfClient;
+	}
 
-    public void addCall(Call call) {
-        calls.add(call);
-    }
+	public void setUsernameOfClient(String usernameOfClient) {
+		this.usernameOfClient = usernameOfClient;
+	}
 
     // Άλλες μέθοδοι για τον υπολογισμό του συνολικού κόστους κλπ μπορούν να προστεθούν εδώ
 }

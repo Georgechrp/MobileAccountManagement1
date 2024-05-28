@@ -9,14 +9,11 @@ public class Client extends User {
     private final String AFM;
     private PhoneNumber phoneNumber;
     private double balance;
-    private ArrayList<Call> callHistory;
     public Client(String username, String name, String surname, String password, String role, String AFM, PhoneNumber phoneNumber) {
         super(username, name, surname, password, role);
         this.AFM = AFM;
-        this.phoneNumber = phoneNumber;
+        setPhoneNumber(phoneNumber);
         this.balance = 0.0; // Αρχικό υπόλοιπο λογαριασμού
-        this.callHistory = new ArrayList<>();
-
     }
 
     public String getAFM() {
@@ -38,13 +35,6 @@ public class Client extends User {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-    public ArrayList<Call> getCallHistory() {
-        return callHistory;
-    }
-    // Προσθήκη ενός τηλεφωνικού κλήση στο ιστορικό
-    public void addCall(Call callDetails) {
-        callHistory.add(callDetails);
-    }
     @Override
     public void register() {
         super.register();
@@ -58,14 +48,6 @@ public class Client extends User {
         System.out.println("Τηλέφωνο: " + phoneNumber.getNumber());
         System.out.println("ΑΦΜ: " + AFM);
         System.out.println("Υπόλοιπο λογαριασμού: " + balance);
-    }
-
-    // Εκτύπωση του ιστορικού των κλήσεων
-    public void displayCallHistory() {
-        System.out.println("Ιστορικό κλήσεων:");
-        for (Call call : callHistory) {
-            System.out.println(call);
-        }
     }
 
     // Μέθοδος εξόφλησης λογαριασμού

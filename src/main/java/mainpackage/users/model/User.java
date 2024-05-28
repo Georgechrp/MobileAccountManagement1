@@ -1,9 +1,6 @@
 package mainpackage.users.model;
 
 public class User {
-    // static μετρητής χρηστών
-    private static int usersCounter = 0;
-
     // Χαρακτηριστικά της κλάσης Users
     private String username;
     private String name;
@@ -19,11 +16,6 @@ public class User {
         setRole(role);
         setPassword(password);
         // Αύξηση του μετρητή κατά ένα κάθε φορά που καλείται ο constructor
-        usersCounter++;
-    }
-
-    public static int getUsersCounter() {
-        return usersCounter;
     }
 
     public String getUsername() {
