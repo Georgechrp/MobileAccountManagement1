@@ -11,8 +11,8 @@ public class Admin extends User{
     private ArrayList<User> users;//όλοι οι χρήστες του συστήματος
 
     private ArrayList<Program> programs;
-    public Admin(String username, String name, String surname, String role) {
-        super(username, name, surname, role);
+    public Admin(String username, String name, String surname, String password, String role) {
+        super(username, name, surname, password, role);
         this.sellers = new ArrayList<>();
         this.users = new ArrayList<>();
         this.programs = new ArrayList<>();

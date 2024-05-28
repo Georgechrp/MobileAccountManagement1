@@ -6,8 +6,8 @@ public class Seller extends User{
     private final String company;
     private ArrayList<Client> clients;
 
-    public Seller(String username, String name, String surname, String role, String company) {
-        super(username, name, surname, role);
+    public Seller(String username, String name, String surname, String password, String role, String company) {
+        super(username, name, surname, password, role);
         this.company = company;
         this.clients = new ArrayList<>();
     }

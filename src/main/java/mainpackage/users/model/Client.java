@@ -10,8 +10,8 @@ public class Client extends User {
     private PhoneNumber phoneNumber;
     private double balance;
     private ArrayList<Call> callHistory;
-    public Client(String username, String name, String surname, String role, String AFM, PhoneNumber phoneNumber) {
-        super(username, name, surname, role);
+    public Client(String username, String name, String surname, String password, String role, String AFM, PhoneNumber phoneNumber) {
+        super(username, name, surname, password, role);
         this.AFM = AFM;
         this.phoneNumber = phoneNumber;
         this.balance = 0.0; // Αρχικό υπόλοιπο λογαριασμού
