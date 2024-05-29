@@ -6,10 +6,10 @@ public class User {
     private String name;
     private String surname;
     private String password;
-    private String role; // Ιδιότητα: client, seller, administrator
+    private int role; // Ιδιότητα: client, seller, administrator
 
     // Constructor της κλάσης Users
-    public User(String username, String name, String surname, String password, String role) {
+    public User(String username, String name, String surname, String password, int role) {
         setUsername(username);
         setName(name);
         setSurname(surname);
@@ -50,11 +50,11 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
+	public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
