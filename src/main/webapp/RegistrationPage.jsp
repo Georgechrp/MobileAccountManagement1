@@ -11,7 +11,7 @@
 
 <br><br>
 <div>
-<form id="register-form" class="register-form" autocomplete="off">
+<form id="register-form" action="register" method="get" class="register-form" autocomplete="off">
 <h1 class="a11y-hidden">Registration Form</h1>
   <div>
     <label class="label-username">
@@ -50,7 +50,7 @@
   <br>
   <div>
     <label class="label-radio2">
-      <select id="selectid" tabindex="6">
+      <select id="selectid" tabindex="6" name="userType">
 		  <option value="">--Please choose an option--</option>
 		  <option value="2">Client</option>
 		  <option value="3">Seller</option>
