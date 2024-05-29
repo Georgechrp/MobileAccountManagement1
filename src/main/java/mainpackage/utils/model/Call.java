@@ -7,12 +7,15 @@ public class Call {
     private final String receiverPhoneNumber;//ο αριθμός τηλεφώνου του καλούμενου
     private final LocalDateTime startTime;// ώρα έναρξης της κλήσης
     private final LocalDateTime endTime;// ώρα λήξης της κλήσης.
-
-    public Call(String callerPhoneNumber, String receiverPhoneNumber, LocalDateTime startTime, LocalDateTime endTime) {
+    private final String callId;
+    
+    public Call(String callerPhoneNumber, String receiverPhoneNumber, LocalDateTime startTime, LocalDateTime endTime, String callId) {
         this.callerPhoneNumber = callerPhoneNumber;
         this.receiverPhoneNumber = receiverPhoneNumber;
         this.startTime = startTime;
         this.endTime = endTime;
+		this.callId = callId;
+        
     }
 
     public String getCallerPhoneNumber() {
@@ -30,4 +33,8 @@ public class Call {
     public LocalDateTime getEndTime() {
         return endTime;
     }
+
+	public String getCallId() {
+		return callId;
+	}
 }

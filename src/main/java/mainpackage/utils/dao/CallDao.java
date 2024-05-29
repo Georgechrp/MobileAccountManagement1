@@ -14,7 +14,7 @@ public class CallDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_CALL_SQL = "INSERT INTO calls" 
-	+ "  (startTime, endTime, caller_phone_number, receiver_phone_number) VALUES (?, ?, ?, ?); ";
+	+ "  (call_id, startTime, endTime, caller_phone_number, receiver_phone_number) VALUES (?, ?, ?, ?, ?); ";
 	
 	
 
@@ -42,11 +42,12 @@ public class CallDao {
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CALL_SQL)) {
 			Timestamp timestamp = Timestamp.valueOf(call.getStartTime());
-			preparedStatement.setTimestamp(1, timestamp);
-			timestamp = Timestamp.valueOf(call.getEndTime());
+			preparedStatement.setString(1, call.getCallId());
 			preparedStatement.setTimestamp(2, timestamp);
-			preparedStatement.setString(3, call.getCallerPhoneNumber());
-			preparedStatement.setString(4, call.getReceiverPhoneNumber());
+			timestamp = Timestamp.valueOf(call.getEndTime());
+			preparedStatement.setTimestamp(3, timestamp);
+			preparedStatement.setString(4, call.getCallerPhoneNumber());
+			preparedStatement.setString(5, call.getReceiverPhoneNumber());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

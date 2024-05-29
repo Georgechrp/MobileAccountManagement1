@@ -42,7 +42,7 @@ public class BillDao {
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BILL_SQL)) {
-			preparedStatement.setString(1, bill.getId());
+			preparedStatement.setString(1, bill.getBill_id());
 			preparedStatement.setString(2, bill.getUsernameOfClient());
 			preparedStatement.setInt(3, bill.getNumberOfCalls());
 			preparedStatement.setInt(4, bill.getBillingMonth());
