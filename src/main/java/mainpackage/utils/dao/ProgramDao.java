@@ -14,7 +14,7 @@ public class ProgramDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
-	+ "  (base_charge, additional_charge, minutes, program_name) VALUES (?, ?, ?, ?); ";
+	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
 	
 	
 
@@ -41,10 +41,11 @@ public class ProgramDao {
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
-			preparedStatement.setDouble(1, program.getBaseCharge());
-			preparedStatement.setDouble(2, program.getAdditionalCharge());
-			preparedStatement.setInt(3, program.getMinutes());
-			preparedStatement.setString(4, program.getName());
+			preparedStatement.setInt(1, program.getId());
+			preparedStatement.setString(2, program.getName());
+			preparedStatement.setDouble(3, program.getBaseCharge());
+			preparedStatement.setDouble(4, program.getAdditionalCharge());
+			preparedStatement.setInt(5, program.getMinutes());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

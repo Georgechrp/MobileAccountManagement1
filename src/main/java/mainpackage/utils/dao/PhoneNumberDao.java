@@ -14,7 +14,7 @@ public class PhoneNumberDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_numbers" 
-	+ "  (phone_number, program_id, minutes, program_name) VALUES (?, ?, ?, ?); ";
+	+ "  (program_id,  phone_number) VALUES ( ?, ?); ";
 	
 
 	public PhoneNumberDao() {
@@ -41,8 +41,9 @@ public class PhoneNumberDao {
 		PhoneNumber phoNum = new PhoneNumber(phoneNumber, program);
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL)) {
-			preparedStatement.setString(1, phoNum.getNumber());
-			preparedStatement.setInt(2, phoNum.getProgram().getId());
+			preparedStatement.setInt(1, phoNum.getProgram().getId());
+			preparedStatement.setString(2, phoNum.getNumber());
+			
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

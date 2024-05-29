@@ -2,7 +2,12 @@ package mainpackage.utils.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import mainpackage.utils.model.Bill;
+import mainpackage.utils.model.PhoneNumber;
+import mainpackage.utils.model.Program;
 
 public class BillDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
@@ -10,7 +15,7 @@ public class BillDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_BILL_SQL = "INSERT INTO bills" 
-	+ "  (number_of_calls, phone_number, billing_month) VALUES (?, ?, ?); ";
+	+ "  (bill_id, username, number_of_calls, billing_month) VALUES (?, ?, ?, ?); ";
 	
 	
 
@@ -31,4 +36,22 @@ public class BillDao {
 		}
 		return connection;
 	}
+	
+	public void insertBill(Bill bill) throws SQLException {
+		System.out.println(INSERT_BILL_SQL);
+		// try-with-resource statement will auto close the connection.
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BILL_SQL)) {
+			preparedStatement.setString(1, bill.getId());
+			preparedStatement.setString(2, bill.getUsernameOfClient());
+			preparedStatement.setInt(3, bill.getNumberOfCalls());
+			preparedStatement.setInt(4, bill.getBillingMonth());
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getStackTrace());
+		}
+	}
+	
 }
+
