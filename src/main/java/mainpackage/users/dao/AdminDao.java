@@ -13,8 +13,7 @@ public class AdminDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_ADMIN_SQL = "INSERT INTO users" 
-	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); " + "INSERT INTO sellers" 
-	+ "  (company, username) VALUES (?, ?); ";
+	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); ";
 
 	protected Connection getConnection() {
 		Connection connection = null;
@@ -40,7 +39,7 @@ public class AdminDao {
 			preparedStatement.setString(2, admin.getPassword());
 			preparedStatement.setString(3, admin.getName());
 			preparedStatement.setString(4, admin.getSurname());
-			preparedStatement.setString(5, admin.getRole());
+			preparedStatement.setInt(5, admin.getRole());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

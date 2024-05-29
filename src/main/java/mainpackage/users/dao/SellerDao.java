@@ -13,10 +13,8 @@ public class SellerDao {
 
 	private static final String INSERT_SELLER_SQL = "INSERT INTO users" 
 	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); " + "INSERT INTO sellers" 
-	+ "  (company, username) VALUES (?, ?); ";
+	+ "  (username, company) VALUES (?, ?); ";
 	
-	
-
 	public SellerDao() {
 	}
 
@@ -44,9 +42,9 @@ public class SellerDao {
 			preparedStatement.setString(2, seller.getPassword());
 			preparedStatement.setString(3, seller.getName());
 			preparedStatement.setString(4, seller.getSurname());
-			preparedStatement.setString(5, seller.getRole());
-			preparedStatement.setString(6, seller.getCompany());
+			preparedStatement.setInt(5, seller.getRole());
 			preparedStatement.setString(7, seller.getUsername());
+			preparedStatement.setString(6, seller.getCompany());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

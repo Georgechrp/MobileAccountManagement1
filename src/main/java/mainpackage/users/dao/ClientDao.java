@@ -46,9 +46,9 @@ public class ClientDao {
 			preparedStatement.setString(2, client.getPassword());
 			preparedStatement.setString(3, client.getName());
 			preparedStatement.setString(4, client.getSurname());
-			preparedStatement.setString(5, client.getRole());
+			preparedStatement.setInt(5, client.getRole());
 			preparedStatement.setString(6, client.getUsername());
-			preparedStatement.setDouble(7,  client.getBalance());
+			preparedStatement.setDouble(7, client.getBalance());
 			preparedStatement.setString(8, client.getPhoneNumber().getNumber());
 			preparedStatement.setString(9, client.getAFM());
 			System.out.println(preparedStatement);
