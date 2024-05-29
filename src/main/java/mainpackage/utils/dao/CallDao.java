@@ -4,20 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
-import mainpackage.utils.model.PhoneNumber;
-import mainpackage.utils.model.Program;
+import mainpackage.utils.model.Call;
 
-public class PhoneNumberDao {
+public class CallDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
-	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_numbers" 
-	+ "  (phone_number, program_id, minutes, program_name) VALUES (?, ?, ?, ?); ";
+	private static final String INSERT_CALL_SQL = "INSERT INTO calls" 
+	+ "  (startTime, endTime, caller_phone_number, receiver_phone_number) VALUES (?, ?, ?, ?); ";
+	
 	
 
-	public PhoneNumberDao() {
+	public CallDao() {
 	}
 
 	protected Connection getConnection() {
@@ -35,23 +36,21 @@ public class PhoneNumberDao {
 		return connection;
 	}
 
-	public void insertNumber(String phoneNumber, Program program) throws SQLException {
-		System.out.println(INSERT_PHONENUMBER_SQL);
+	public void insertUser(Call call) throws SQLException {
+		System.out.println(INSERT_CALL_SQL);
 		// try-with-resource statement will auto close the connection.
-		PhoneNumber phoNum = new PhoneNumber(phoneNumber, program);
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL)) {
-			preparedStatement.setString(1, phoNum.getNumber());
-			preparedStatement.setInt(2, phoNum.getProgram().getId());
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CALL_SQL)) {
+			Timestamp timestamp = Timestamp.valueOf(call.getStartTime());
+			preparedStatement.setTimestamp(1, timestamp);
+			timestamp = Timestamp.valueOf(call.getEndTime());
+			preparedStatement.setTimestamp(2, timestamp);
+			preparedStatement.setString(3, call.getCallerPhoneNumber());
+			preparedStatement.setString(4, call.getReceiverPhoneNumber());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getStackTrace());
 		}
-	}
-
-	public  void deleteNumber(String phoneNumber) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -19,7 +19,10 @@ import mainpackage.users.model.Admin;
 import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
 import mainpackage.users.model.User;
+import mainpackage.utils.dao.PhoneNumberDao;
+import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
+import mainpackage.utils.model.Program;
 
 /**
  * Servlet implementation class AdminServlet
@@ -30,6 +33,8 @@ public class AdminServlet extends HttpServlet {
 	private AdminDao adminDao = new AdminDao();
 	private ClientDao clientDao = new ClientDao();
 	private SellerDao sellerDao = new SellerDao();
+	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
+	private ProgramDao programDao = new ProgramDao();
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -145,5 +150,23 @@ public class AdminServlet extends HttpServlet {
 		UserDao.deleteUser(username);
 		response.sendRedirect("list");
 	}
+	
+	private void insertPhoneNumber(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		String phoneNumber = request.getParameter("phonenumber");
+		int programId = Integer.parseInt(request.getParameter("programId"));
+		Program program = programDao.getProgramById(programId);
+		phoneNumberDao.insertNumber(phoneNumber, program);
+		response.sendRedirect("list");
+	}
+	
+	private void deletePhoneNumber(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		String phoneNumber = request.getParameter("phonenumber");
+		phoneNumberDao.deleteNumber(phoneNumber);
+		response.sendRedirect("list");
+	}
+	
+	
 
 }

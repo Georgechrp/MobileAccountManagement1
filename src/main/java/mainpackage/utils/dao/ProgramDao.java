@@ -5,19 +5,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
-public class PhoneNumberDao {
+
+public class ProgramDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
-	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_numbers" 
-	+ "  (phone_number, program_id, minutes, program_name) VALUES (?, ?, ?, ?); ";
+	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
+	+ "  (base_charge, additional_charge, minutes, program_name) VALUES (?, ?, ?, ?); ";
+	
 	
 
-	public PhoneNumberDao() {
+	public ProgramDao() {
 	}
 
 	protected Connection getConnection() {
@@ -35,14 +36,15 @@ public class PhoneNumberDao {
 		return connection;
 	}
 
-	public void insertNumber(String phoneNumber, Program program) throws SQLException {
-		System.out.println(INSERT_PHONENUMBER_SQL);
+	public void insertUser(Program program) throws SQLException {
+		System.out.println(INSERT_PROGRAM_SQL);
 		// try-with-resource statement will auto close the connection.
-		PhoneNumber phoNum = new PhoneNumber(phoneNumber, program);
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL)) {
-			preparedStatement.setString(1, phoNum.getNumber());
-			preparedStatement.setInt(2, phoNum.getProgram().getId());
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
+			preparedStatement.setDouble(1, program.getBaseCharge());
+			preparedStatement.setDouble(2, program.getAdditionalCharge());
+			preparedStatement.setInt(3, program.getMinutes());
+			preparedStatement.setString(4, program.getName());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -50,8 +52,8 @@ public class PhoneNumberDao {
 		}
 	}
 
-	public  void deleteNumber(String phoneNumber) {
+	public Program getProgramById(int programId) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 }

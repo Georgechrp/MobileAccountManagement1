@@ -1,7 +1,5 @@
 package mainpackage.utils.model;
 
-import mainpackage.program.model.Program;
-
 public class PhoneNumber {
     private final String number; //ο μοναδικός αριθμός τηλεφώνου
     private Program program; //το πρόγραμμα χρέωσης (πακέτο) που αντιστοιχεί στον αριθμό τηλεφώνου

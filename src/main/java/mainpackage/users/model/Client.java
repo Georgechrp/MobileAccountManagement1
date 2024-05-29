@@ -1,9 +1,6 @@
 package mainpackage.users.model;
 
-import mainpackage.calls.model.Call;
 import mainpackage.utils.model.PhoneNumber;
-
-import java.util.ArrayList;
 
 public class Client extends User {
     private final String AFM;
