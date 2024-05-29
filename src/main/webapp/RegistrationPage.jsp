@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
+<%@ include file="topMenu2.jsp" %>
 <html>
 <head>
 <meta charset="ISO-8859-1">
@@ -11,7 +12,7 @@
 
 <br><br>
 <div>
-<form id="register-form" action="register" method="get" class="register-form" autocomplete="off">
+<form id="register-form" class="register-form" autocomplete="off">
 <h1 class="a11y-hidden">Registration Form</h1>
   <div>
     <label class="label-username">
@@ -42,7 +43,6 @@
     </label>
   </div>
   <div>
-  <div>
     <label class="label-radio1">
       <span class="required">Role</span>
     </label>
@@ -50,7 +50,7 @@
   <br>
   <div>
     <label class="label-radio2">
-      <select id="selectid" tabindex="6" name="userType">
+      <select id="selectid" tabindex="6">
 		  <option value="">--Please choose an option--</option>
 		  <option value="2">Client</option>
 		  <option value="3">Seller</option>
