@@ -30,7 +30,6 @@ import mainpackage.utils.model.Program;
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private AdminDao adminDao = new AdminDao();
 	private ClientDao clientDao = new ClientDao();
 	private SellerDao sellerDao = new SellerDao();
 	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
@@ -51,15 +50,6 @@ public class AdminServlet extends HttpServlet {
 			case "/new":
 				showNewForm(request, response);
 				break;
-			case "/insert_client":
-				insertClient(request, response);
-				break;
-			case "/insert_admin":
-				insertAdmin(request, response);
-				break;
-			case "/insert_seller":
-				insertSeller(request, response);
-				break;
 			case "/insert_phoneNumber":
 				insertPhoneNumber(request, response);
 				break;
@@ -72,12 +62,53 @@ public class AdminServlet extends HttpServlet {
 			case "/edit":
 				showEditForm(request, response);
 				break;
+			case "/register":
+				register(request, response);
+				break;
+			case "/login":
+				login(request, response);
+				break;
+			case "/logout":
+				logout(request, response);
+				break;	
+			case "/pay_bill":
+				pay_bill(request, response);
+				break;
+			case "/display_account":
+				display_account(request, response);
+				break;
+            case "/display_call_history":
+            	display_call_history(request, response);
+				break;	
+            case "/display_balance":
+            	display_balance(request,response);
+            	break;
+            case "/set_balance":
+            	set_balance(request, response);
+            	break;
+            case "/display_programs":
+            	display_programs(request, response);
+            	break;
+            case "/change_program":	
+            	change_program(request, response);
+            	break;
 			default:
 				listUser(request, response);
 				break;
 			}
 		} catch (SQLException ex) {
 			throw new ServletException(ex);
+		}
+	}
+
+	private void register(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int typeOfRegistration = Integer.parseInt(request.getParameter("userType"));
+		if (typeOfRegistration == 2) {
+			insertClient(request, response);
+		}
+		else if (typeOfRegistration == 3) {
+			insertSeller(request,response);
 		}
 	}
 
@@ -105,30 +136,18 @@ public class AdminServlet extends HttpServlet {
 
 	}
 	
-	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
-		String role = request.getParameter("name");
-		Admin newAdmin = new Admin(username, name, surname, password, role);
-		adminDao.insertAdmin(newAdmin);
-		response.sendRedirect("list");
-	}
-	
 	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String username = request.getParameter("name");
 		String name = request.getParameter("name");
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
-		String role = request.getParameter("name");
+		int role = Integer.parseInt(request.getParameter("name"));
 		String AFM = request.getParameter("AFM");
 		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
 		Client newClient = new Client(username, name, surname, password, role, AFM, PhoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("list");
+		response.sendRedirect("login.jsp");
 	}
 	
 	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
@@ -137,11 +156,11 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
-		String role = request.getParameter("name");
+		int role = Integer.parseInt(request.getParameter("name"));
 		String company = request.getParameter("company");
 		Seller newSeller = new Seller(username, name, surname, password, role, company);
 		sellerDao.insertSeller(newSeller);
-		response.sendRedirect("list");
+		response.sendRedirect("login.jsp");
 	}
 
 	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
