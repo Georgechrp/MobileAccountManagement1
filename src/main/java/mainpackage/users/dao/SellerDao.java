@@ -3,18 +3,28 @@ package mainpackage.users.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import mainpackage.users.model.Seller;
+
+import ReservationModule.users.models.Student;
+import mainpackage.users.model.Client;
+import mainpackage.users.model.User;
+import mainpackage.utils.model.PhoneNumber;
+import mainpackage.utils.model.Program;
 
 public class SellerDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
+	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
-	private static final String INSERT_SELLER_SQL = "INSERT INTO users" 
-	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); " + "INSERT INTO sellers" 
-	+ "  (username, company) VALUES (?, ?); ";
+	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT_SELLER_SQL = "INSERT INTO seller (username, company) VALUES (?, ?, ?, ?)";
+	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
+	private static final String LOGIN_SELLER_SQL = "SELECT * FROM seller WHERE username = ?;";
+	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM programs WHERE id = ?";
+
 	
+
 	public SellerDao() {
 	}
 
@@ -35,20 +45,64 @@ public class SellerDao {
 
 	public void insertSeller(Seller seller) throws SQLException {
 		System.out.println(INSERT_SELLER_SQL);
+		System.out.println(INSERT_USER_SQL);
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SELLER_SQL)) {
-			preparedStatement.setString(1, seller.getUsername());
-			preparedStatement.setString(2, seller.getPassword());
-			preparedStatement.setString(3, seller.getName());
-			preparedStatement.setString(4, seller.getSurname());
-			preparedStatement.setInt(5, seller.getRole());
-			preparedStatement.setString(7, seller.getUsername());
-			preparedStatement.setString(6, seller.getCompany());
-			System.out.println(preparedStatement);
-			preparedStatement.executeUpdate();
+				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
+	            PreparedStatement sellerStatement = connection.prepareStatement(INSERT_SELLER_SQL)) {
+			userStatement.setString(1, seller.getUsername());
+            userStatement.setString(2, seller.getPassword());
+            userStatement.setString(3, seller.getName());
+            userStatement.setString(4, seller.getSurname());
+            userStatement.setInt(5, seller.getRole());
+            userStatement.executeUpdate();
+            
+            
+            sellerStatement.setString(1, seller.getUsername());
+            sellerStatement.setString(2, seller.getCompany());
+            sellerStatement.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getStackTrace());
+			e.printStackTrace();
 		}
+	}
+	
+	public Seller setSeller(String username) {
+		try (Connection connection = getConnection();
+		         PreparedStatement userStatement = connection.prepareStatement(LOGIN_USER_SQL);
+		         PreparedStatement sellerStatement = connection.prepareStatement(LOGIN_SELLER_SQL)) {
+		        
+		        userStatement.setString(1, username);
+		        System.out.println(userStatement);
+		        
+		        try (ResultSet rsu = userStatement.executeQuery()) {
+		            if (rsu.next()) {
+		                sellerStatement.setString(1, username);
+		                System.out.println(sellerStatement);
+		                
+		                try (ResultSet rss = sellerStatement.executeQuery()) {
+		                    if (rss.next()) {
+		                        String username = rsu.getString("username");
+		                        String password = rsu.getString("password");
+		                        String name = rsu.getString("first_name");
+		                        String surname = rsu.getString("surname");
+		                        String company = rsu.getString("company");
+		                        int role = rsu.getInt("role");		           
+								return new Seller(username, name, surname, password,  company, role);
+		                    } else {
+		                        // Handle case where no results are found in student query
+		                        System.out.println("No seller found with the provided username.");
+		                        return null;
+		                    }
+		                }
+		            } else {
+		                // Handle case where no results are found in user query
+		                System.out.println("No user found with the provided username.");
+		                return null;
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return null;
+		    }
 	}
 }
