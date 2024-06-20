@@ -11,6 +11,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mainpackage.users.dao.ClientDao;
+import mainpackage.users.model.Client;
+import mainpackage.utils.dao.BillDao;
+import mainpackage.utils.dao.CallDao;
+import mainpackage.utils.dao.PhoneNumberDao;
+import mainpackage.utils.dao.ProgramDao;
+import mainpackage.utils.model.PhoneNumber;
+
 
 @WebServlet("/ClientServlet")
 public class ClientServlet extends HttpServlet {
@@ -35,12 +43,12 @@ public class ClientServlet extends HttpServlet {
 				register(request, response);
 				break;
 			case "/login":
-				UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        userServlet.login();
+				//UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
+		        //userServlet.login();
 		        break;
 			case "/logout":
-				UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        userServlet.logout();
+				//UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
+		        //userServlet.logout();
 				break;	
 			case "/pay_bill":
 				pay_bill(request, response);
@@ -76,10 +84,10 @@ public class ClientServlet extends HttpServlet {
 		String surname = request.getParameter("surname");
 		String password = request.getParameter("password");
 		String AFM = request.getParameter("AFM");
-		Double balance = request.getParameter("balance");
+		Double balance = Double.parseDouble(request.getParameter("balance"));
 		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password,  AFM, balance, PhoneNumber, role);
+		Client newClient = new Client(username, name, surname, password, role,  AFM, balance, PhoneNumber);
 		clientDao.insertClient(newClient);
 		response.sendRedirect("list");
 	}
@@ -91,31 +99,31 @@ public class ClientServlet extends HttpServlet {
 	}
 	
 	
-	private void change_program(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void change_program(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("programs.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	
-	private void display_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void display_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("balance.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	
-	private void set_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void set_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("balance.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	
-	private void display_call_history(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException{
+	private void display_call_history(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
 		RequestDispatcher dispatcher = request.getRequestDispatcher("call_history.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	
-	private void display_account(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void display_account(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("account.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -126,10 +134,6 @@ public class ClientServlet extends HttpServlet {
 		
 	}
     
-    
-	/**
-     * @see HttpServlet#HttpServlet()
-     */
     public ClientServlet() {
         super();
         // TODO Auto-generated constructor stub
