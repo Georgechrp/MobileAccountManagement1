@@ -1,147 +1,95 @@
-package mainpackage.users.web;
+package mainpackage.users.dao;
 
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import mainpackage.users.dao.AdminDao;
-import mainpackage.users.dao.ClientDao;
-import mainpackage.users.dao.SellerDao;
-import mainpackage.users.dao.UserDao;
 import mainpackage.users.model.Admin;
-import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
-import mainpackage.users.model.User;
-import mainpackage.utils.dao.PhoneNumberDao;
-import mainpackage.utils.dao.ProgramDao;
-import mainpackage.utils.model.PhoneNumber;
-import mainpackage.utils.model.Program;
 
+public class AdminDao {
+	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
+	private String jdbcUsername = "root";
+	private String jdbcPassword = "root";
 
-@WebServlet("/AdminServlet")
-public class AdminServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private AdminDao adminDao = new AdminDao();
-	private ClientDao clientDao = new ClientDao();
-	private SellerDao sellerDao = new SellerDao();
-	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
-	private ProgramDao programDao = new ProgramDao();
+	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT_ADMIN_SQL = "INSERT INTO client (username, afm, balance, phone_number) VALUES (?, ?, ?, ?)";
+	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
+	private static final String LOGIN_ADMIN_SQL = "SELECT * FROM client WHERE username = ?;";
+
 	
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
+	
+	public AdminDao() {
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String action = request.getServletPath();
-
+	protected Connection getConnection() {
+		Connection connection = null;
 		try {
-			switch (action) {
-			case "/new":
-				//showNewForm(request, response);
-				break;
-			case "/insert_client":
-				insertClient(request, response);
-				break;
-			case "/insert_admin":
-				insertAdmin(request, response);
-				break;
-			case "/insert_seller":
-				insertSeller(request, response);
-				break;
-			case "/insert_phoneNumber":
-				insertPhoneNumber(request, response);
-				break;
-			case "/delete_user":
-				//deleteUser(request, response);
-				break;
-			case "/delete_phoneNumber":
-				deletePhoneNumber(request, response);
-				break;
-			case "/edit":
-				//showEditForm(request, response);
-				break;
-			default:
-				//listUser(request, response);
-				break;
-			}
-		} catch (SQLException ex) {
-			throw new ServletException(ex);
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return connection;
+	}
+
+	public void insertAdmin(Admin admin) throws SQLException {
+		System.out.println(INSERT_ADMIN_SQL);
+		System.out.println(INSERT_USER_SQL);
+		try (Connection connection = getConnection();
+				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
+	            PreparedStatement adminStatement = connection.prepareStatement(INSERT_ADMIN_SQL)) {
+			adminStatement.setString(1, admin.getUsername());
+			adminStatement.setString(2, admin.getPassword());
+			adminStatement.setString(3, admin.getName());
+			adminStatement.setString(4, admin.getSurname());
+			adminStatement.setInt(5, admin.getRole());
+			adminStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
-		int role = Integer.parseInt(request.getParameter("name"));
-		Admin newAdmin = new Admin(username, name, surname, password, role);
-		adminDao.insertAdmin(newAdmin);
-		response.sendRedirect("list");
+	public Admin setAdmin (String username) {
+		try (Connection connection = getConnection();
+		         PreparedStatement userStatement = connection.prepareStatement(LOGIN_USER_SQL);
+		         PreparedStatement adminStatement = connection.prepareStatement(LOGIN_ADMIN_SQL)) {
+		        
+		        userStatement.setString(1, username);
+		        System.out.println(userStatement);
+		        
+		        try (ResultSet rsu = userStatement.executeQuery()) {
+		            if (rsu.next()) {
+		               adminStatement.setString(1, username);
+		                System.out.println(adminStatement);
+		                
+		                try (ResultSet rss = adminStatement.executeQuery()) {
+		                    if (rss.next()) {
+		                        String uname = rsu.getString("username");
+		                        String password = rsu.getString("password");
+		                        String name = rsu.getString("first_name");
+		                        String surname = rsu.getString("surname");
+		                        int role = rsu.getInt("role");		           
+								return new Admin(uname, name, surname, password,  role);
+		                    } else {
+		                        // Handle case where no results are found in student query
+		                        System.out.println("No admin found with the provided username.");
+		                        return null;
+		                    }
+		                }
+		            } else {
+		                // Handle case where no results are found in user query
+		                System.out.println("No user found with the provided username.");
+		                return null;
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return null;
+		    }
 	}
-	
-	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
-		int role = Integer.parseInt(request.getParameter("role"));
-		String AFM = request.getParameter("AFM");
-		Double balance = Double.parseDouble(request.getParameter("balance"));
-		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, PhoneNumber);
-		clientDao.insertClient(newClient);
-		response.sendRedirect("list");
-	}
-	
-	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
-		int role = Integer.parseInt(request.getParameter("role"));
-		String company = request.getParameter("company");
-		Seller newSeller = new Seller(username, name, surname, password, role, company);
-		sellerDao.insertSeller(newSeller);
-		response.sendRedirect("list");
-	}
-
-//	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
-//			throws SQLException, IOException {
-//		String username = request.getParameter("username");
-//		//UserDao.deleteUser(username);
-//		response.sendRedirect("list");
-//	}
-	
-	private void insertPhoneNumber(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String phoneNumber = request.getParameter("phonenumber");
-		int programId = Integer.parseInt(request.getParameter("programId"));
-		Program program = programDao.getProgramById(programId);
-		phoneNumberDao.insertNumber(phoneNumber, program);
-		response.sendRedirect("list");
-	}
-	
-	private void deletePhoneNumber(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String phoneNumber = request.getParameter("phonenumber");
-		phoneNumberDao.deleteNumber(phoneNumber);
-		response.sendRedirect("list");
-	}
-	
-	
-
 }
