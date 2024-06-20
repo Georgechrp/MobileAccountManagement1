@@ -47,7 +47,7 @@ public class AdminServlet extends HttpServlet {
 		try {
 			switch (action) {
 			case "/new":
-				showNewForm(request, response);
+				//showNewForm(request, response);
 				break;
 			case "/insert_client":
 				insertClient(request, response);
@@ -68,39 +68,15 @@ public class AdminServlet extends HttpServlet {
 				deletePhoneNumber(request, response);
 				break;
 			case "/edit":
-				showEditForm(request, response);
+				//showEditForm(request, response);
 				break;
 			default:
-				listUser(request, response);
+				//listUser(request, response);
 				break;
 			}
 		} catch (SQLException ex) {
 			throw new ServletException(ex);
 		}
-	}
-
-	private void listUser(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-		List<User> listUser = UserDao.selectAllUsers();
-		request.setAttribute("listUser", listUser);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		User existingUser = UserDao.selectUser(id);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
-		request.setAttribute("user", existingUser);
-		dispatcher.forward(request, response);
-
 	}
 	
 	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
@@ -109,7 +85,7 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
-		String role = request.getParameter("name");
+		int role = Integer.parseInt(request.getParameter("name"));
 		Admin newAdmin = new Admin(username, name, surname, password, role);
 		adminDao.insertAdmin(newAdmin);
 		response.sendRedirect("list");
@@ -121,9 +97,9 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
-		String role = request.getParameter("name");
+		int role = Integer.parseInt(request.getParameter("role"));
 		String AFM = request.getParameter("AFM");
-		Double balance = request.getParameter("balance");
+		Double balance = Double.parseDouble(request.getParameter("balance"));
 		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
 		Client newClient = new Client(username, name, surname, password, role, AFM, balance, PhoneNumber);
 		clientDao.insertClient(newClient);
@@ -136,7 +112,7 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
-		String role = request.getParameter("name");
+		int role = Integer.parseInt(request.getParameter("role"));
 		String company = request.getParameter("company");
 		Seller newSeller = new Seller(username, name, surname, password, role, company);
 		sellerDao.insertSeller(newSeller);
