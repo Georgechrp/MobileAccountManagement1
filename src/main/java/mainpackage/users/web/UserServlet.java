@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import mainpackage.users.dao.AdminDao;
 import mainpackage.users.dao.ClientDao;
@@ -30,7 +31,9 @@ import mainpackage.utils.model.Program;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao userDao = new UserDao();
-	
+	ClientDao clientDao = new ClientDao();
+	AdminDao adminDao = new AdminDao();
+	SellerDao sellerDao = new SellerDao();
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
@@ -58,17 +61,17 @@ public class UserServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
         System.out.println("Attempting login for user: " + username);
-    	int role = userDao.getRole(username,password);
+    	int role = userDao.Login(username,password);
     	if (role == 2) {
-    		currentClient = clientDao.setClient(username);
+    		Client currentClient = clientDao.setClient(username);
     		RequestDispatcher dispatcher = request.getRequestDispatcher("Client Main.jsp");
 		    dispatcher.forward(request, response);
 		} else if (role == 3) {
-			currentSeller = sellerDao.setSeller(username);
+			Seller currentSeller = sellerDao.setSeller(username);
     		RequestDispatcher dispatcher = request.getRequestDispatcher("Seller Main.jsp");
 		    dispatcher.forward(request, response);
 		} else if (role == 1) {
-			currentAdmin = adminDao.setAdmin(username);
+			Admin currentAdmin = adminDao.setAdmin(username);
     		RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
 		    dispatcher.forward(request, response);
 		} else {
@@ -78,7 +81,7 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 	
-	private void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("LogoutPage.jsp");
 		dispatcher.forward(request, response);
 	}
