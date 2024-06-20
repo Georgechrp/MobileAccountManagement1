@@ -2,8 +2,6 @@ package mainpackage.users.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,16 +42,12 @@ public class SellerServlet extends HttpServlet {
 		        userServlet.login(request, response);
 		        break;
 			case "/logout":
-				UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        userServlet.logout(request, response);
+				UserServlet userServlet1 = (UserServlet) getServletContext().getAttribute("userServlet");
+		        userServlet1.logout(request, response);
 				break;		
 			case "/display_programs":
 				display_programs(request, response);
-				break;	
-			case "/insertClient":
-				AdminServlet adminServlet = (AdminServlet) getServletContext().getAttribute("adminServlet");
-		        adminServlet.insertClient(request, response);
-				break;	
+				break;
 			case "/matchClient":
 				matchClient(request, response);
 				break;	
