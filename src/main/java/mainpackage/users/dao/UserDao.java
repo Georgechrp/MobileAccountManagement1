@@ -1,88 +1,68 @@
-package mainpackage.users.web;
+package mainpackage.users.dao;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import mainpackage.users.dao.AdminDao;
-import mainpackage.users.dao.ClientDao;
-import mainpackage.users.dao.SellerDao;
-import mainpackage.users.dao.UserDao;
-import mainpackage.users.model.Admin;
-import mainpackage.users.model.Client;
-import mainpackage.users.model.Seller;
-import mainpackage.users.model.User;
-import mainpackage.utils.dao.PhoneNumberDao;
-import mainpackage.utils.dao.ProgramDao;
-import mainpackage.utils.model.PhoneNumber;
-import mainpackage.utils.model.Program;
+public class UserDao {
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
+	private String JDBC_USER = "root";
+	private String JDBC_PASSWORD = "L1ok3y20";
+    
+    private static final String LOGIN_VALIDATION_PASSWORD_SQL = "SELECT role FROM user WHERE username = ? AND password = ?;";
+    
+    private static final String LOGIN_VALIDATION_USERNAME_SQL = "SELECT role FROM user WHERE username = ? ;";
 
+    protected Connection getConnection() {
 
+        Connection connection = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("SQL Exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class Not Found Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return connection;
+    }
+    
 
-@WebServlet("/UserServlet")
-public class UserServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private UserDao userDao = new UserDao();
-	ClientDao clientDao = new ClientDao();
-	AdminDao adminDao = new AdminDao();
-	SellerDao sellerDao = new SellerDao();
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
-       
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getServletPath();
-		try {
-			switch (action) {
-			case "/login":
-				login(request, response);
-				break;
-			case "/logout":
-				logout(request, response);
-				break;	
-			}
-		} catch (SQLException ex) {
-			throw new ServletException(ex);
-		}
-	}
-	
-	
-	public void login (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-        System.out.println("Attempting login for user: " + username);
-    	int role = userDao.Login(username,password);
-    	if (role == 2) {
-    		Client currentClient = clientDao.setClient(username);
-    		RequestDispatcher dispatcher = request.getRequestDispatcher("Client Main.jsp");
-		    dispatcher.forward(request, response);
-		} else if (role == 3) {
-			Seller currentSeller = sellerDao.setSeller(username);
-    		RequestDispatcher dispatcher = request.getRequestDispatcher("Seller Main.jsp");
-		    dispatcher.forward(request, response);
-		} else if (role == 1) {
-			//Admin currentAdmin = adminDao.setAdmin(username);
-    		RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
-		    dispatcher.forward(request, response);
-		} else {
-			HttpSession session = request.getSession();
-            session.setAttribute("error", "Invalid username or password");
-            response.sendRedirect("LoginPage.jsp");
-		}
-	}
-	
-	public void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("LogoutPage.jsp");
-		dispatcher.forward(request, response);
-	}
+    public int Login(String username, String password) throws ServletException, IOException {
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+             PreparedStatement passwordPreparedStatement = connection.prepareStatement(LOGIN_VALIDATION_PASSWORD_SQL);
+        		PreparedStatement usernamePreparedStatement = connection.prepareStatement(LOGIN_VALIDATION_USERNAME_SQL)) {
+             
+        	int role = -1;
+        	
+        	passwordPreparedStatement.setString(1, username);
+        	passwordPreparedStatement.setString(2, password);
+            
+        	usernamePreparedStatement.setString(1, username);
+        	ResultSet resultSet2 = usernamePreparedStatement.executeQuery();
+        	if (resultSet2.next()) {
+                role= 0;
+            }
+        	
+            ResultSet resultSet = passwordPreparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+               role = resultSet.getInt(role);
+               
+            }
+            return role;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -2;
+        }
+        
+    }
+    
 }
