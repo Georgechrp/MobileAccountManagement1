@@ -43,12 +43,12 @@ public class ClientServlet extends HttpServlet {
 				register(request, response);
 				break;
 			case "/login":
-				//UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        //userServlet.login();
+				UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
+		        userServlet.login(request, response);
 		        break;
 			case "/logout":
-				//UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        //userServlet.logout();
+				UserServlet userServlet1 = (UserServlet) getServletContext().getAttribute("userServlet");
+		        userServlet1.logout(request, response);
 				break;	
 			case "/pay_bill":
 				pay_bill(request, response);
