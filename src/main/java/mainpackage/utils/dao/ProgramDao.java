@@ -3,18 +3,21 @@ package mainpackage.utils.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 import mainpackage.utils.model.Program;
 
 
 public class ProgramDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
+    private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
+	
+	private static final String GET_PROGRAMS_SQL = "SELECT * FROM programs; ";
 	
 	
 
@@ -36,7 +39,8 @@ public class ProgramDao {
 		return connection;
 	}
 
-	public void insertUser(Program program) throws SQLException {
+	
+	public void insertProgram(Program program) {
 		System.out.println(INSERT_PROGRAM_SQL);
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
@@ -51,6 +55,30 @@ public class ProgramDao {
 		} catch (SQLException e) {
 			System.out.println(e.getStackTrace());
 		}
+	}
+	
+	public ArrayList<Program> getPrograms() throws SQLException {
+		System.out.println(GET_PROGRAMS_SQL);
+		ArrayList<Program> programs = new ArrayList<Program>();
+		// try-with-resource statement will auto close the connection.
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				int minutes = resultSet.getInt("minutes");
+				Double basecharge = resultSet.getDouble("basecharge");
+				Double additionalcharge = resultSet.getDouble("additionalcharge");
+				Program p1 = new Program(id,name,minutes,basecharge,additionalcharge);
+				programs.add(p1);
+			}
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getStackTrace());
+		}
+		return programs;
 	}
 
 	public Program getProgramById(int programId) {
