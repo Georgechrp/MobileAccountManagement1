@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import mainpackage.users.model.Admin;
 
 public class AdminDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
+	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
