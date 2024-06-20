@@ -11,6 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mainpackage.users.dao.ClientDao;
+import mainpackage.users.dao.SellerDao;
+import mainpackage.users.model.Seller;
+import mainpackage.utils.dao.PhoneNumberDao;
+import mainpackage.utils.dao.ProgramDao;
+
 
 @WebServlet("/SellerServlet")
 public class SellerServlet extends HttpServlet {
@@ -65,13 +71,13 @@ public class SellerServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String company = request.getParameter("company");
 		int role = 3;
-		Seller newSeller = new Seller(username, name, surname, password, company, role);
+		Seller newSeller = new Seller(username, name, surname, password, role, company);
 		sellerDao.insertSeller(newSeller);
 		response.sendRedirect("list");
 	}
 	
 	
-	private void display_programs(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void display_programs(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("account.jsp");
 		dispatcher.forward(request, response);
 	}
