@@ -72,6 +72,10 @@ public class SellerServlet extends HttpServlet {
 	
 	
 	private void display_programs(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+		ArrayList<Program> programs = programDao.getPrograms();
+		for(int i=0; i < programs.size(); i++) {
+			//Here will be html code
+		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("account.jsp");
 		dispatcher.forward(request, response);
 	}
