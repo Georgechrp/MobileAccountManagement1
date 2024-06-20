@@ -6,9 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ReservationModule.users.models.Student;
 import mainpackage.users.model.Client;
-import mainpackage.users.model.User;
 import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
