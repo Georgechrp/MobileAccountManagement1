@@ -6,11 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ReservationModule.users.models.Student;
-import mainpackage.users.model.Client;
-import mainpackage.users.model.User;
-import mainpackage.utils.model.PhoneNumber;
-import mainpackage.utils.model.Program;
+import mainpackage.users.model.Seller;
 
 public class SellerDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
@@ -81,13 +77,13 @@ public class SellerDao {
 		                
 		                try (ResultSet rss = sellerStatement.executeQuery()) {
 		                    if (rss.next()) {
-		                        String username = rsu.getString("username");
+		                        String uname = rsu.getString("username");
 		                        String password = rsu.getString("password");
 		                        String name = rsu.getString("first_name");
 		                        String surname = rsu.getString("surname");
 		                        String company = rsu.getString("company");
 		                        int role = rsu.getInt("role");		           
-								return new Seller(username, name, surname, password,  company, role);
+								return new Seller(uname, name, surname, password,  role, company);
 		                    } else {
 		                        // Handle case where no results are found in student query
 		                        System.out.println("No seller found with the provided username.");
