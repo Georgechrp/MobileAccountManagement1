@@ -2,6 +2,7 @@ package mainpackage.users.web;
 
 import java.io.IOException;
 
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,11 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ReservationModule.users.dao.AdminDao;
-import ReservationModule.users.dao.ProfessorDao;
-import ReservationModule.users.dao.StudentDao;
-import ReservationModule.users.dao.UserDao;
-import ReservationModule.utils.dao.ReservationDao;
 import mainpackage.users.dao.ClientDao;
 import mainpackage.users.model.Client;
 import mainpackage.utils.dao.BillDao;
@@ -26,7 +22,7 @@ import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
 
 
-@WebServlet("/client")
+@WebServlet("/ClientServlet")
 public class ClientServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ClientDao clientDao;

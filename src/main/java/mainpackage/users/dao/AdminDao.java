@@ -3,26 +3,17 @@ package mainpackage.users.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import mainpackage.users.model.Admin;
-import mainpackage.users.model.Seller;
 
 public class AdminDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
+	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
-	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
-	private static final String INSERT_ADMIN_SQL = "INSERT INTO client (username, afm, balance, phone_number) VALUES (?, ?, ?, ?)";
-	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
-	private static final String LOGIN_ADMIN_SQL = "SELECT * FROM client WHERE username = ?;";
-
-	
-	
-	public AdminDao() {
-	}
+	private static final String INSERT_ADMIN_SQL = "INSERT INTO users" 
+	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); ";
 
 	protected Connection getConnection() {
 		Connection connection = null;
@@ -30,8 +21,10 @@ public class AdminDao {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return connection;
@@ -39,57 +32,18 @@ public class AdminDao {
 
 	public void insertAdmin(Admin admin) throws SQLException {
 		System.out.println(INSERT_ADMIN_SQL);
-		System.out.println(INSERT_USER_SQL);
+		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
-				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
-	            PreparedStatement adminStatement = connection.prepareStatement(INSERT_ADMIN_SQL)) {
-			adminStatement.setString(1, admin.getUsername());
-			adminStatement.setString(2, admin.getPassword());
-			adminStatement.setString(3, admin.getName());
-			adminStatement.setString(4, admin.getSurname());
-			adminStatement.setInt(5, admin.getRole());
-			adminStatement.executeUpdate();
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ADMIN_SQL)) {
+			preparedStatement.setString(1, admin.getUsername());
+			preparedStatement.setString(2, admin.getPassword());
+			preparedStatement.setString(3, admin.getName());
+			preparedStatement.setString(4, admin.getSurname());
+			preparedStatement.setInt(5, admin.getRole());
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getStackTrace());
 		}
-	}
-	
-	public Admin setAdmin (String username) {
-		try (Connection connection = getConnection();
-		         PreparedStatement userStatement = connection.prepareStatement(LOGIN_USER_SQL);
-		         PreparedStatement adminStatement = connection.prepareStatement(LOGIN_ADMIN_SQL)) {
-		        
-		        userStatement.setString(1, username);
-		        System.out.println(userStatement);
-		        
-		        try (ResultSet rsu = userStatement.executeQuery()) {
-		            if (rsu.next()) {
-		               adminStatement.setString(1, username);
-		                System.out.println(adminStatement);
-		                
-		                try (ResultSet rss = adminStatement.executeQuery()) {
-		                    if (rss.next()) {
-		                        String uname = rsu.getString("username");
-		                        String password = rsu.getString("password");
-		                        String name = rsu.getString("first_name");
-		                        String surname = rsu.getString("surname");
-		                        int role = rsu.getInt("role");		           
-								return new Admin(uname, name, surname, password,  role);
-		                    } else {
-		                        // Handle case where no results are found in student query
-		                        System.out.println("No admin found with the provided username.");
-		                        return null;
-		                    }
-		                }
-		            } else {
-		                // Handle case where no results are found in user query
-		                System.out.println("No user found with the provided username.");
-		                return null;
-		            }
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        return null;
-		    }
 	}
 }

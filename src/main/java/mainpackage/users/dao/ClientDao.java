@@ -1,17 +1,20 @@
 package mainpackage.users.dao;
 
 import java.sql.Connection;
+
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import mainpackage.users.model.Client;
+import mainpackage.users.model.User;
 import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
 public class ClientDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/mobileaccountmanagementdb";
+	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
@@ -29,7 +32,7 @@ public class ClientDao {
 	protected Connection getConnection() {
 		Connection connection = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
