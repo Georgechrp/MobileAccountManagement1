@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import mainpackage.users.model.Client;
 import mainpackage.utils.model.PhoneNumber;
@@ -21,7 +22,13 @@ public class ClientDao {
 	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
 	private static final String LOGIN_CLIENT_SQL = "SELECT * FROM client WHERE username = ?;";
 	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM programs WHERE id = ?";
-
+	private static final String GET_CLIENTS_SQL = "SELECT user.username, user.password, user.first_name, user.surname, user.role, client.afm,\r\n"
+			+ "client.balance, client.phone_number, phone_number.programid, program.name, program.minutes,\r\n"
+			+ "program.basecharge, program.additionalcharge\r\n"
+			+ "FROM user\r\n"
+			+ "INNER JOIN client ON user.username=client.username\r\n"
+			+ "INNER JOIN phone_number ON client.phone_number=phone_number.number\r\n"
+			+ "INNER JOIN program ON phone_number.programid=program.id;";
 	
 
 	public ClientDao() {
@@ -137,5 +144,42 @@ public class ClientDao {
 		        e.printStackTrace();
 		        return null;
 	    }
+	}
+	
+	public ArrayList <Client> getClients() throws SQLException {
+		System.out.println(GET_CLIENTS_SQL);
+		ArrayList<Client> clients = new ArrayList<Client>();
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(GET_CLIENTS_SQL)) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				//CLIENT
+				String username = resultSet.getString("user.username");
+				String name = resultSet.getString("user.first_name");
+				String surname = resultSet.getString("user.surname");
+				String password = resultSet.getString("user.password");
+				int role = 2;
+				String AFM = resultSet.getString("client.AFM");
+				Double balance = resultSet.getDouble("client.balance");
+				String phone_number = resultSet.getString("client.phone_number");
+
+				//PROGRAM
+				int id = resultSet.getInt("phone_number.programid");
+				String program_name = resultSet.getString("program.name");;
+				int minutes = resultSet.getInt("program.minutes");
+				Double baseCharge = resultSet.getDouble("program.basecharge");
+				Double additionalCharge = resultSet.getDouble("program.additionalcharge");
+				Program program = new Program (id, program_name,  minutes, baseCharge, additionalCharge);
+				PhoneNumber phoneNumber = new PhoneNumber (phone_number, program);
+
+				Client c1 = new Client(username, name, surname, password, role, AFM,  balance, phoneNumber);
+				clients.add(c1);
+			}
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getStackTrace());
+		}
+		return clients;
 	}
 }
