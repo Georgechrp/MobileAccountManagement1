@@ -1,6 +1,7 @@
 package mainpackage.users.web;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,6 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ReservationModule.users.dao.AdminDao;
+import ReservationModule.users.dao.ProfessorDao;
+import ReservationModule.users.dao.StudentDao;
+import ReservationModule.users.dao.UserDao;
+import ReservationModule.utils.dao.ReservationDao;
 import mainpackage.users.dao.ClientDao;
 import mainpackage.users.model.Client;
 import mainpackage.utils.dao.BillDao;
@@ -20,76 +26,84 @@ import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
 
 
-@WebServlet("/ClientServlet")
+@WebServlet("/client")
 public class ClientServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ClientDao clientDao = new ClientDao();
-	private BillDao billDao = new BillDao();
-	private CallDao callDao = new CallDao();
-	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
-	private ProgramDao programDao = new ProgramDao();
+	private ClientDao clientDao;
+	private BillDao billDao;
+	private CallDao callDao;
+	private PhoneNumberDao phoneNumberDao;
+	private ProgramDao programDao;
+	
+	public void init() {
+        clientDao = new ClientDao();
+        billDao = new BillDao();
+        callDao = new CallDao();
+        phoneNumberDao = new PhoneNumberDao();
+        programDao = new ProgramDao();
+    }
 	
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
-       
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getServletPath();
-		try {
-			switch (action) {
-			case "/register":
-				register(request, response);
-				break;
-			case "/login":
-				UserServlet userServlet = (UserServlet) getServletContext().getAttribute("userServlet");
-		        userServlet.login(request, response);
-		        break;
-			case "/logout":
-				UserServlet userServlet1 = (UserServlet) getServletContext().getAttribute("userServlet");
-		        userServlet1.logout(request, response);
-				break;	
-			case "/pay_bill":
-				pay_bill(request, response);
-				break;
-			case "/display_account":
-				display_account(request, response);
-				break;
-            case "/display_call_history":
-            	display_call_history(request, response);
-				break;	
-            case "/display_balance":
-            	display_balance(request,response);
-            	break;
-            case "/set_balance":
-            	set_balance(request, response);
-            	break;
-            case "/display_programs":
-            	display_programs(request, response);
-            	break;
-            case "/change_program":	
-            	change_program(request, response);
-            	break;
-			}
-		} catch (SQLException ex) {
-			throw new ServletException(ex);
+	 protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			 throws ServletException, IOException {
+	        
+		 	String action = request.getParameter("action");
+		    System.out.println("Action parameter: " + action);
+
+		    if (action == null) {
+		        response.getWriter().println("Action parameter is missing.");
+		        return;
+		    }
+
+		    try {
+		        switch (action) {
+		            case "register":
+		                System.out.println("Register action called");
+		                registerClient(request, response);
+		                break;
+		            // other cases...
+		            default:
+		                response.getWriter().println("Unknown action: " + action);
+		                break;
+		        }
+		    } catch (SQLException ex) {
+		        ex.printStackTrace(response.getWriter());
+		        throw new ServletException(ex);
+		    }
 		}
-	}
+
+	 protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	            throws ServletException, IOException {
+	        String action = request.getParameter("action");
+	        try {
+	            switch (action) {
+	                case "listUser":
+	                    listUser(request, response);
+	                    break;
+	                // Add more cases as needed
+	                default:
+	                    response.sendRedirect("index.jsp");
+	                    break;
+	            }
+	        } catch (SQLException e) {
+	            throw new ServletException(e);
+	        }
+	    }
 	
 	
-	private void register (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void registerClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
-		String name = request.getParameter("name");
+		String name = request.getParameter("first_name"); // Correct parameter name
 		String surname = request.getParameter("surname");
 		String password = request.getParameter("password");
-		String AFM = request.getParameter("AFM");
-		Double balance = Double.parseDouble(request.getParameter("balance"));
-		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
+		String AFM = request.getParameter("afm");
+		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
+		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password, role,  AFM, balance, PhoneNumber);
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("list");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+	    dispatcher.forward(request, response);
 	}
 	
 	
@@ -138,4 +152,12 @@ public class ClientServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    private void listUser(HttpServletRequest request, HttpServletResponse response)
+	        throws SQLException, IOException, ServletException {
+	    
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+	    dispatcher.forward(request, response);
+	}
+	
 }
