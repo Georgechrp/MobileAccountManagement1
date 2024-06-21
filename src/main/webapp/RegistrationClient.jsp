@@ -7,8 +7,6 @@
 <meta charset="ISO-8859-1">
 <title>Registration Page</title>
 <link href="styles.css" rel="stylesheet" type="text/css" >
-
-
 </head>
 <body>
 
@@ -65,7 +63,7 @@
   
   </form>
   
-
   <br>
+  </div>
 </body>
 </html>

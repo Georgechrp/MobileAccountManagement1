@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,10 +20,6 @@ import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
 import mainpackage.users.model.User;
 
-
-
-
-@WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao userDao = new UserDao();
@@ -61,19 +56,27 @@ public class UserServlet extends HttpServlet {
 		int role = userDao.login(username,password);
 		if (role == 2) {
 			clientDao.setClient(username);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Client Main.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("ClientMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == 3) {
 			sellerDao.setSeller(username);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Seller Main.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == 1) {
 			adminDao.setAdmin(username);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Admin Main.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
 			dispatcher.forward(request, response);
+		} else if (role == -1){
+			HttpSession session = request.getSession();
+			session.setAttribute("error", "Invalid username");
+			response.sendRedirect("LoginPage.jsp");
+		} else if (role == 0){
+			HttpSession session = request.getSession();
+			session.setAttribute("error", "Invalid password");
+			response.sendRedirect("LoginPage.jsp");
 		} else {
 			HttpSession session = request.getSession();
-			session.setAttribute("error", "Invalid username or password");
+			session.setAttribute("error", "Runtime Error: refer to console log");
 			response.sendRedirect("LoginPage.jsp");
 		}
 	}

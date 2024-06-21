@@ -1,24 +1,22 @@
 package mainpackage.users.dao;
 
 import java.sql.Connection;
-
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import mainpackage.users.model.Client;
-import mainpackage.users.model.User;
 import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
 public class ClientDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
 	private static final String INSERT_CLIENT_SQL = "INSERT INTO client (username, afm, balance, phone_number) VALUES (?, ?, ?, ?)";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
 	private static final String LOGIN_CLIENT_SQL = "SELECT * FROM client WHERE username = ?;";
@@ -50,19 +48,24 @@ public class ClientDao {
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
+				PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
 	            PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
 			userStatement.setString(1, client.getUsername());
-            userStatement.setString(2, client.getPassword());
-            userStatement.setString(3, client.getName());
-            userStatement.setString(4, client.getSurname());
+            userStatement.setString(4, client.getPassword());
+            userStatement.setString(2, client.getName());
+            userStatement.setString(3, client.getSurname());
             userStatement.setInt(5,client.getRole());
             userStatement.executeUpdate();
+            
+            numberStatement.setString(2, client.getPhoneNumber().getNumber());
+            numberStatement.setInt(1, 0);
+            numberStatement.executeUpdate();
             
             // Set parameters for student table
             clientStatement.setString(1, client.getUsername());
             clientStatement.setString(2, client.getAFM());
-            clientStatement.setString(3, client.getPhoneNumber().getNumber());
-            clientStatement.setDouble(2, client.getBalance());
+            clientStatement.setString(4, client.getPhoneNumber().getNumber());
+            clientStatement.setDouble(3, 0.0);
             clientStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -88,12 +91,12 @@ public class ClientDao {
 		                        String password = rsu.getString("password");
 		                        String name = rsu.getString("first_name");
 		                        String surname = rsu.getString("surname");
-		                        String afm = rsu.getString("AFM");
+		                        String afm = rsu.getString("afm");
 		                        int role = rsu.getInt("role");
 		                        String phone_number = rss.getString("phone_number");
 		                        Double balance = rss.getDouble("balance");
 		                
-		                        int programId = rss.getInt("program_id");
+		                        int programId = rss.getInt("programid");
 		                        Program program = null;
 		                        try (PreparedStatement programStatement = connection.prepareStatement(PROGRAM_SQL)) {
 		                            programStatement.setInt(1, programId);
@@ -104,13 +107,13 @@ public class ClientDao {
 		                                    int id = rsp.getInt("id");
 		                                    String name1 = rsp.getString("name");
 		                                    int minutes = rsp.getInt("minutes");
-		                                    double baseCharge = rsp.getDouble("baseCharge");
-		                                    double additionalCharge = rsp.getDouble("additionalCharge");
+		                                    double baseCharge = rsp.getDouble("basecharge");
+		                                    double additionalCharge = rsp.getDouble("additionalcharge");
 
 		                                    program = new Program(id, name1, minutes, baseCharge, additionalCharge);
 		                                } else {
 		                                    System.out.println("No program found with the provided ID.");
-		                                    return null;
+		                                    program = null;
 		                                }
 		                            }
 		                        }
@@ -120,7 +123,7 @@ public class ClientDao {
 								return new Client(uname, name, surname, password, role, afm, balance, phoneNumber);
 		                    } else {
 		                        // Handle case where no results are found in student query
-		                        System.out.println("No student found with the provided username.");
+		                        System.out.println("No client found with the provided username.");
 		                        return null;
 		                    }
 		                }

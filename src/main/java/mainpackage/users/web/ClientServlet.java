@@ -1,14 +1,11 @@
 package mainpackage.users.web;
 
 import java.io.IOException;
-
-
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +18,6 @@ import mainpackage.utils.dao.PhoneNumberDao;
 import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
 
-
-@WebServlet("/ClientServlet")
 public class ClientServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ClientDao clientDao;
@@ -39,18 +34,11 @@ public class ClientServlet extends HttpServlet {
         programDao = new ProgramDao();
     }
 	
-	
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			 throws ServletException, IOException {
 	        
 		 	String action = request.getParameter("action");
 		    System.out.println("Action parameter: " + action);
-
-		    if (action == null) {
-		        response.getWriter().println("Action parameter is missing.");
-		        return;
-		    }
-
 		    try {
 		        switch (action) {
 		            case "register":
@@ -67,7 +55,7 @@ public class ClientServlet extends HttpServlet {
 		        throw new ServletException(ex);
 		    }
 		}
-
+	 
 	 protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        String action = request.getParameter("action");
@@ -85,7 +73,6 @@ public class ClientServlet extends HttpServlet {
 	            throw new ServletException(e);
 	        }
 	    }
-	
 	
 	private void registerClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
@@ -155,5 +142,5 @@ public class ClientServlet extends HttpServlet {
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
 	    dispatcher.forward(request, response);
 	}
-	
+
 }

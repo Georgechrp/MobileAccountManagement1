@@ -214,4 +214,3 @@ input[type="checkbox"]:checked + label span::after {
   outline-offset: 2px;
   background: hsl(var(--fgColorH), var(--fgColorS), var(--fgColorL));
 }
-

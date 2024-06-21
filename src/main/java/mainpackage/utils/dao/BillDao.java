@@ -6,13 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import mainpackage.utils.model.Bill;
-import mainpackage.utils.model.PhoneNumber;
-import mainpackage.utils.model.Program;
 
 public class BillDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
+    private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_BILL_SQL = "INSERT INTO bills" 
 	+ "  (bill_id, username, number_of_calls, billing_month) VALUES (?, ?, ?, ?); ";
@@ -54,4 +52,3 @@ public class BillDao {
 	}
 	
 }
-

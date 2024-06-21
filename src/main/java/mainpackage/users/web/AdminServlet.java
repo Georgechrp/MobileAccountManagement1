@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +23,6 @@ import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
-
-@WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminDao adminDao = new AdminDao();
@@ -62,7 +59,7 @@ public class AdminServlet extends HttpServlet {
 				insertPhoneNumber(request, response);
 				break;
 			case "/delete_user":
-				deleteUser(request, response);
+				//deleteUser(request, response);
 				break;
 			case "/delete_phoneNumber":
 				deletePhoneNumber(request, response);
@@ -119,12 +116,12 @@ public class AdminServlet extends HttpServlet {
 		response.sendRedirect("list");
 	}
 
-	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("username");
-		UserDao.deleteUser(username);
-		response.sendRedirect("list");
-	}
+//	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
+//			throws SQLException, IOException {
+//		String username = request.getParameter("username");
+//		//UserDao.deleteUser(username);
+//		response.sendRedirect("list");
+//	}
 	
 	private void insertPhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {

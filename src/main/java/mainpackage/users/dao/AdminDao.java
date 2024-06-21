@@ -46,4 +46,9 @@ public class AdminDao {
 			System.out.println(e.getStackTrace());
 		}
 	}
+
+	public void setAdmin(String username) {
+		// TODO Auto-generated method stub
+		
+	}
 }

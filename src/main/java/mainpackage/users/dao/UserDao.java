@@ -34,9 +34,9 @@ public class UserDao {
     }
     
 
-    public int Login(String username, String password) throws ServletException, IOException {
+    public int login(String username, String password) throws ServletException, IOException {
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+    	try (Connection connection = getConnection();
              PreparedStatement passwordPreparedStatement = connection.prepareStatement(LOGIN_VALIDATION_PASSWORD_SQL);
         		PreparedStatement usernamePreparedStatement = connection.prepareStatement(LOGIN_VALIDATION_USERNAME_SQL)) {
              
@@ -54,8 +54,7 @@ public class UserDao {
             ResultSet resultSet = passwordPreparedStatement.executeQuery();
 
             if (resultSet.next()) {
-               role = resultSet.getInt(role);
-               
+               role = resultSet.getInt("role");
             }
             return role;
         } catch (SQLException e) {

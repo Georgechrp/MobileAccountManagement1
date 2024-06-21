@@ -5,8 +5,8 @@ import mainpackage.utils.model.PhoneNumber;
 public class Client extends User {
     private final String AFM;
     private PhoneNumber phoneNumber;
-    private double balance;
-    public Client(String username, String name, String surname, String password, int role, String AFM, double balance, PhoneNumber phoneNumber) {
+    private Double balance;
+    public Client(String username, String name, String surname, String password, int role, String AFM, Double balance, PhoneNumber phoneNumber) {
         super(username, name, surname, password, role);
         this.AFM = AFM;
         setPhoneNumber(phoneNumber);
@@ -25,7 +25,7 @@ public class Client extends User {
         this.phoneNumber = phoneNumber;
     }
 
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 

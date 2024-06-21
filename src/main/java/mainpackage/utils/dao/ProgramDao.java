@@ -12,7 +12,7 @@ import mainpackage.utils.model.Program;
 public class ProgramDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
@@ -62,8 +62,9 @@ public class ProgramDao {
 		ArrayList<Program> programs = new ArrayList<Program>();
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
-			ResultSet resultSet = preparedStatement.executeQuery();
+			PreparedStatement preparedStatement = connection.prepareStatement(GET_PROGRAMS_SQL);
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+			
 			while(resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String name = resultSet.getString("name");
@@ -74,7 +75,6 @@ public class ProgramDao {
 				programs.add(p1);
 			}
 			System.out.println(preparedStatement);
-			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getStackTrace());
 		}

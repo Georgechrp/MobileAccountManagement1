@@ -12,8 +12,8 @@
 
 
 <div class="contentLogin">
-<form id="register-form" class="register-form" autocomplete="off" action="<%=request.getContextPath()%>/user" method="post">
-<input type="hidden" name="action" value="loginUser" />
+<form id="register-form" class="register-form" autocomplete="off" action="<%=request.getContextPath()%>/UserServlet" method="post">
+<input type="hidden" name="action" value="login" />
 <h1 class="a11y-hidden">Login Form</h1>
   <input type="checkbox" name="show-password" class="show-password a11y-hidden" id="show-password" tabindex="2" />
   <label class="label-show-password" for="show-password">
@@ -39,5 +39,6 @@
   </form>
 
   <br>
+ </div>
 </body>
 </html>
