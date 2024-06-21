@@ -1,9 +1,9 @@
 <div id="top-menu">
     <ul>
         <li><a href="ShowPrograms.jsp">Show programs</a></li>
-        <li><a href="RegistrationClient.jsp">Register a new client</a></li>
+        <li><a href="RegistrationClient2.jsp">Register a new client</a></li>
         <li><a href="RegistrationClient.jsp">Match a client to a program</a></li>
-        <li><a href="RegistrationPage.jsp">Logout</a></li>
+        <li><a href="index.jsp">Logout</a></li>
     
     </ul>
 </div>
