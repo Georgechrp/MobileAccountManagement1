@@ -45,6 +45,10 @@ public class ClientServlet extends HttpServlet {
 		                System.out.println("Register action called");
 		                registerClient(request, response);
 		                break;
+		            case "register2":
+		                System.out.println("Register action called");
+		                registerClient2(request, response);
+		                break;
 		            // other cases...
 		            default:
 		                response.getWriter().println("Unknown action: " + action);
@@ -86,6 +90,21 @@ public class ClientServlet extends HttpServlet {
 		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
 		clientDao.insertClient(newClient);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+	    dispatcher.forward(request, response);
+	}
+	
+	private void registerClient2(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+		String username = request.getParameter("username");
+		String name = request.getParameter("first_name"); // Correct parameter name
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
+		String AFM = request.getParameter("afm");
+		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
+		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
+		int role = 2;
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
+		clientDao.insertClient(newClient);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
 	    dispatcher.forward(request, response);
 	}
 	
