@@ -1,9 +1,10 @@
 <div id="top-menu">
     <ul>
-        <li><a href="ShowPrograms.jsp">Show programs</a></li>
+    	<li><a href="SellerMain.jsp">Main Page</a></li>
+        <li><form action="<%=request.getContextPath()%>/SellerServlet" method="post"><input type="submit" name="action" value="Show Programs"></form></li>
         <li><a href="RegistrationClient2.jsp">Register a new client</a></li>
-        <li><a href="RegistrationClient.jsp">Match a client to a program</a></li>
-        <li><a href="index.jsp">Logout</a></li>
+        <li><form action="<%=request.getContextPath()%>/SellerServlet" method="post"><input type="submit" name="action" value="Match Client"></form></li>
+        <li><form action="<%=request.getContextPath()%>/UserServlet" method="post"><input type="submit" name="action" value="Logout"></form></li>
     
     </ul>
 </div>
