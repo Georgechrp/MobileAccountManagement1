@@ -62,18 +62,19 @@ public class SellerServlet extends HttpServlet {
 		}
 	}
 	
-	private void insertNewClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	private void insertNewClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
-		String name = request.getParameter("name");
+		String name = request.getParameter("first_name"); // Correct parameter name
 		String surname = request.getParameter("surname");
 		String password = request.getParameter("password");
-		String AFM = request.getParameter("AFM");
-		Double balance = Double.parseDouble(request.getParameter("balance"));
-		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
+		String AFM = request.getParameter("afm");
+		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
+		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password, role,  AFM, balance, PhoneNumber);
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("SellerMain.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
+	    dispatcher.forward(request, response);
 	}
 
 	private void matchClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -95,7 +96,6 @@ public class SellerServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 	    dispatcher.forward(request, response);
 	}
-	
 	
 	private void display_programs(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 	    ArrayList<Program> programs = programDao.getPrograms();
