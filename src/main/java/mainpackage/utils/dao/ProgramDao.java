@@ -17,7 +17,7 @@ public class ProgramDao {
 	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
 	
-	private static final String GET_PROGRAMS_SQL = "SELECT * FROM programs; ";
+	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
 	
 	
 
@@ -26,17 +26,17 @@ public class ProgramDao {
 
 	protected Connection getConnection() {
 		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return connection;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+        } catch (SQLException e) {
+            System.err.println("SQL Exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class Not Found Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return connection;
 	}
 
 	
