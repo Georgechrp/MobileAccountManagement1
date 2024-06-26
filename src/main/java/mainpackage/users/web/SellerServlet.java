@@ -53,15 +53,25 @@ public class SellerServlet extends HttpServlet {
 			case "Show Programs":
 				display_programs(request, response);
 				break;
-			case "matchClient":
+			case "Match Client":
 				matchClient(request, response);
-				break;	
+				break;
+			case "Match":
+				changeProgram(request, response);
+				break;
 			}
 		} catch (SQLException ex) {
 			throw new ServletException(ex);
 		}
 	}
 	
+	private void changeProgram(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		clientDao.changeProgram(request.getParameter("phone_number"),Integer.parseInt(request.getParameter("program_id")));
+		RequestDispatcher dispatcher = request.getRequestDispatcher("MatchClient.jsp");
+		dispatcher.forward(request, response);
+	}
+
+
 	private void insertNewClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
 		String name = request.getParameter("first_name"); // Correct parameter name
@@ -80,7 +90,9 @@ public class SellerServlet extends HttpServlet {
 	private void matchClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		ArrayList <Client> clients = clientDao.getClients();
 		ArrayList <Program> programs = programDao.getPrograms();
-		RequestDispatcher dispatcher = request.getRequestDispatcher(".jsp");
+		request.setAttribute("clients", clients);
+        request.setAttribute("programs", programs);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("MatchClient.jsp");
 		dispatcher.forward(request, response);
 	}
 	
