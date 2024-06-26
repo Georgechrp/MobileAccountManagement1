@@ -39,7 +39,7 @@ public class UserServlet extends HttpServlet {
 			case "login":
 				login(request, response);
 				break;
-			case "logout":
+			case "Logout":
 				logout(request, response);
 				break;	
 			}
