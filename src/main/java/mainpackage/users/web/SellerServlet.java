@@ -50,7 +50,7 @@ public class SellerServlet extends HttpServlet {
 			case "insertNewClient":
 				insertNewClient(request, response);
 				break;
-			case "display_programs":
+			case "Show Programs":
 				display_programs(request, response);
 				break;
 			case "matchClient":
