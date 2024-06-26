@@ -78,7 +78,7 @@ public class CallDao {
 					LocalDateTime startTime = LocalDateTime.now();
 					LocalDateTime endTime = LocalDateTime.now();
 					String callId = resultSet.getString("callId");
-					Call cl1 = new Call(String callerPhoneNumber, String receiverPhoneNumber, LocalDateTime startTime, LocalDateTime endTime, String callId);
+					Call cl1 = new Call(callerPhoneNumber, receiverPhoneNumber, startTime, endTime, callId);
 					calls.add(cl1);
 				}
 				System.out.println(preparedStatement);
