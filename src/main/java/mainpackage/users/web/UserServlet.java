@@ -83,7 +83,7 @@ public class UserServlet extends HttpServlet {
 	
 	
 	public void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("LogoutPage.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
 }
