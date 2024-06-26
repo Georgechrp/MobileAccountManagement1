@@ -66,7 +66,7 @@ public class SellerServlet extends HttpServlet {
 	}
 	
 	private void changeProgram(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		clientDao.changeProgram(request.getParameter("phone_number"),Integer.parseInt(request.getParameter("program_id")));
+		clientDao.changeProgram(request.getParameter("number"),Integer.parseInt(request.getParameter("program")));
 		RequestDispatcher dispatcher = request.getRequestDispatcher("MatchClient.jsp");
 		dispatcher.forward(request, response);
 	}
