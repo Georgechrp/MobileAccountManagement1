@@ -182,4 +182,9 @@ public class ClientDao {
 		}
 		return clients;
 	}
+
+	public void changeProgram(String parameter, int int1) {
+		// TODO Auto-generated method stub
+		
+	}
 }
