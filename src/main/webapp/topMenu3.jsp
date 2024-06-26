@@ -1,11 +1,30 @@
 <div id="top-menu">
     <ul>
-    	<li><a href="SellerMain.jsp">Main Page</a></li>
-        <li><form action="<%=request.getContextPath()%>/SellerServlet" method="post"><input type="submit" name="action" value="Show Programs"></form></li>
-        <li><a href="RegistrationClient2.jsp">Register a new client</a></li>
-        <li><form action="<%=request.getContextPath()%>/SellerServlet" method="post"><input type="submit" name="action" value="Match Client"></form></li>
-        <li><form action="<%=request.getContextPath()%>/UserServlet" method="post"><input type="submit" name="action" value="Logout"></form></li>
-    
+        <li>
+            <form id="top" action="SellerMain.jsp" method="get">
+                <input class="top" type="submit" value="Main Page">
+            </form>
+        </li>
+        <li>
+            <form id="top" action="<%=request.getContextPath()%>/SellerServlet" method="post">
+                <input class="top" type="submit" name="action" value="Show Programs">
+            </form>
+        </li>
+        <li>
+            <form id="top" action="RegistrationClient2.jsp" method="get">
+                <input class="top" type="submit" value="Register a new client">
+            </form>
+        </li>
+        <li>
+            <form id="top" action="<%=request.getContextPath()%>/SellerServlet" method="post">
+                <input class="top" type="submit" name="action" value="Match Client">
+            </form>
+        </li>
+        <li>
+            <form id="top" action="<%=request.getContextPath()%>/UserServlet" method="post">
+                <input class="top" type="submit" name="action" value="Logout">
+            </form>
+        </li>
     </ul>
 </div>
 <style>
@@ -32,17 +51,35 @@
     #top-menu li {
         float: left;
     }
-    #top-menu li a {
+    #top-menu li input {
         display: block;
         color: white;
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
+        background-color:#333;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
     }
-    #top-menu li a:hover {
+    #top-menu li input:hover {
         background-color: #111;
     }
     .content {
         padding-top: 5px; /* Adds space to account for the fixed menu */
+    }
+    #top {
+	    background-color:#333;
+	    display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+    
     }
 </style>
