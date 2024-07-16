@@ -8,23 +8,19 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import mainpackage.utils.model.Call;
-import mainpackage.utils.model.Program;
-
 
 public class CallDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
-	private static final String INSERT_CALL_SQL = "INSERT INTO call" 
+	private static final String INSERT_CALL_SQL = "INSERT INTO calls" 
 	+ "  (call_id, startTime, endTime, caller_phone_number, receiver_phone_number) VALUES (?, ?, ?, ?, ?); ";
 	
-	private static final String GET_CALLS_SQL = "SELECT * FROM call; ";
+	private static final String SELECT_CALLS_BY_PHONE_NUMBER = "SELECT id, caller, receiver, start_time, end_time FROM `call` WHERE caller = ? OR receiver = ?";
 	
 	
 
@@ -46,7 +42,7 @@ public class CallDao {
 		return connection;
 	}
 
-	public void insertCall(Call call) throws SQLException {
+	public void insertUser(Call call) throws SQLException {
 		System.out.println(INSERT_CALL_SQL);
 		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
@@ -64,29 +60,28 @@ public class CallDao {
 			System.out.println(e.getStackTrace());
 		}
 	}
-
 	
-	public ArrayList <Call> getCalls() throws SQLException {
-		System.out.println(GET_CALLS_SQL);
-		ArrayList<Call> calls = new ArrayList<Call>();
-		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(GET_CALLS_SQL);
-				ResultSet resultSet = preparedStatement.executeQuery()) {
-				while(resultSet.next()) {
-					String callerPhoneNumber = resultSet.getString("callerPhoneNumber");
-					String receiverPhoneNumber = resultSet.getString("receiverPhoneNumber");
-					LocalDateTime startTime = LocalDateTime.now();
-					LocalDateTime endTime = LocalDateTime.now();
-					String callId = resultSet.getString("callId");
-					Call cl1 = new Call(callerPhoneNumber, receiverPhoneNumber, startTime, endTime, callId);
-					calls.add(cl1);
-				}
-				System.out.println(preparedStatement);
-			} catch (SQLException e) {
-				System.out.println(e.getStackTrace());
-			}
-		
-		
-		return calls;
-	}
+	 public List<Call> getCallHistory(String phoneNumber) {
+	        List<Call> calls = new ArrayList<>();
+	        try (Connection connection = getConnection();
+	             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CALLS_BY_PHONE_NUMBER)) {
+	            preparedStatement.setString(1, phoneNumber);
+	            preparedStatement.setString(2, phoneNumber);
+	            ResultSet rs = preparedStatement.executeQuery();
+
+	            while (rs.next()) {
+	                String callId = rs.getString("id");
+	                String callerPhoneNumber = rs.getString("caller");
+	                String receiverPhoneNumber = rs.getString("receiver");
+	                LocalDateTime startTime = rs.getTimestamp("start_time").toLocalDateTime();
+	                LocalDateTime endTime = rs.getTimestamp("end_time").toLocalDateTime();
+
+	                Call call = new Call(callerPhoneNumber, receiverPhoneNumber, startTime, endTime, callId);
+	                calls.add(call);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return calls;
+	    }
 }
