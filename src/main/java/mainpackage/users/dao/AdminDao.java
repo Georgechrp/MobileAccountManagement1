@@ -21,10 +21,8 @@ public class AdminDao {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return connection;
@@ -32,7 +30,6 @@ public class AdminDao {
 
 	public void insertAdmin(Admin admin) throws SQLException {
 		System.out.println(INSERT_ADMIN_SQL);
-		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ADMIN_SQL)) {
 			preparedStatement.setString(1, admin.getUsername());
