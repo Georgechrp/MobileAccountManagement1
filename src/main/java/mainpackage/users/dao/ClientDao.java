@@ -14,7 +14,7 @@ import mainpackage.utils.model.Program;
 public class ClientDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
@@ -50,34 +50,59 @@ public class ClientDao {
 	}
 
 	public void insertClient(Client client) throws SQLException {
-		System.out.println(INSERT_CLIENT_SQL);
-		System.out.println(INSERT_USER_SQL);
-		// try-with-resource statement will auto close the connection.
-		try (Connection connection = getConnection();
-				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
-				PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
-	            PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
-			userStatement.setString(1, client.getUsername());
-            userStatement.setString(4, client.getPassword());
-            userStatement.setString(2, client.getName());
-            userStatement.setString(3, client.getSurname());
-            userStatement.setInt(5,client.getRole());
-            userStatement.executeUpdate();
-            
-            numberStatement.setString(2, client.getPhoneNumber().getNumber());
-            numberStatement.setInt(1, 0);
-            numberStatement.executeUpdate();
-            
-            // Set parameters for student table
-            clientStatement.setString(1, client.getUsername());
-            clientStatement.setString(2, client.getAFM());
-            clientStatement.setString(4, client.getPhoneNumber().getNumber());
-            clientStatement.setDouble(3, 0.0);
-            clientStatement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    System.out.println(INSERT_CLIENT_SQL);
+	    System.out.println(INSERT_USER_SQL);
+
+	    // Try-with-resource statement will auto close the connection.
+	    try (Connection connection = getConnection();
+	         PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
+	         PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
+	         PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
+
+	        // Insert into user table
+	        userStatement.setString(1, client.getUsername());
+	        userStatement.setString(2, client.getName());
+	        userStatement.setString(3, client.getSurname());
+	        userStatement.setString(4, client.getPassword());
+	        userStatement.setInt(5, client.getRole());
+	        userStatement.executeUpdate();
+
+	        // Check if program exists
+	        if (client.getPhoneNumber() != null && client.getPhoneNumber().getProgram() != null) {
+	            int programId = client.getPhoneNumber().getProgram().getId();
+
+	            try (PreparedStatement programCheckStatement = connection.prepareStatement(PROGRAM_SQL)) {
+	                programCheckStatement.setInt(1, programId);
+	                System.out.println(programCheckStatement);
+
+	                try (ResultSet rs = programCheckStatement.executeQuery()) {
+	                    if (!rs.next()) {
+	                        throw new SQLException("Program ID " + programId + " does not exist.");
+	                    }
+	                }
+	            }
+
+	            // Insert into phone_number table
+	            numberStatement.setInt(1, programId);
+	            numberStatement.setString(2, client.getPhoneNumber().getNumber());
+	            numberStatement.executeUpdate();
+
+	        } else {
+	            throw new SQLException("Phone number or program is null.");
+	        }
+
+	        // Insert into client table
+	        clientStatement.setString(1, client.getUsername());
+	        clientStatement.setString(2, client.getAFM());
+	        clientStatement.setDouble(3, client.getBalance());
+	        clientStatement.setString(4, client.getPhoneNumber().getNumber());
+	        clientStatement.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 	public Client setClient(String username) {
 		try (Connection connection = getConnection();
