@@ -14,8 +14,12 @@ public class ProgramDao {
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "L1ok3y20";
 
-	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
+	private static final String INSERT_PROGRAM_SQL = "INSERT INTO program" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
+	
+	private static final String SELECT_PROGRAM_BY_ID = "SELECT * FROM program WHERE program_id = ?;";
+	
+	private static final String UPDATE_PROGRAM_SQL = "UPDATE program SET base_charge = ? WHERE program_id = ?; ";			
 	
 	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
 	
@@ -42,7 +46,6 @@ public class ProgramDao {
 	
 	public void insertProgram(Program program) {
 		System.out.println(INSERT_PROGRAM_SQL);
-		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
 			preparedStatement.setInt(1, program.getId());
@@ -57,10 +60,44 @@ public class ProgramDao {
 		}
 	}
 	
+	
+	public Program getProgramById(int id) {
+		Program program = null;
+	    try (Connection connection = getConnection();
+	            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROGRAM_BY_ID)) {
+	        preparedStatement.setInt(1, id);
+	        ResultSet rs = preparedStatement.executeQuery();
+	        
+	        if (rs.next()) {
+	            String name = rs.getString("program_name");
+	            int minutes = rs.getInt("minutes");
+	            double baseCharge = rs.getDouble("base_charge");
+	            double additionalCharge = rs.getDouble("additional_charge");
+	            program = new Program(id, name, minutes, baseCharge, additionalCharge);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return program;
+	}
+	
+	public void editProgram(Program program) {
+		System.out.println(UPDATE_PROGRAM_SQL);
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROGRAM_SQL)) {
+			preparedStatement.setDouble(1, program.getBaseCharge());
+	        preparedStatement.setInt(2, program.getId());
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getStackTrace());
+		}
+	}
+	
+	
 	public ArrayList<Program> getPrograms() throws SQLException {
 		System.out.println(GET_PROGRAMS_SQL);
 		ArrayList<Program> programs = new ArrayList<Program>();
-		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(GET_PROGRAMS_SQL);
 			ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -81,8 +118,5 @@ public class ProgramDao {
 		return programs;
 	}
 
-	public Program getProgramById(int programId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 }
