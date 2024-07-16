@@ -43,32 +43,29 @@ public class AdminServlet extends HttpServlet {
 
 		try {
 			switch (action) {
-			case "/new":
-				//showNewForm(request, response);
-				break;
-			case "/insert_client":
-				insertClient(request, response);
-				break;
-			case "/insert_admin":
+			case "insert_admin":
 				insertAdmin(request, response);
 				break;
-			case "/insert_seller":
+			case "insert_client":
+				insertClient(request, response);
+				break;
+			case "insert_seller":
 				insertSeller(request, response);
 				break;
-			case "/insert_phoneNumber":
+			case "insert_phoneNumber":
 				insertPhoneNumber(request, response);
 				break;
-			case "/delete_user":
-				//deleteUser(request, response);
-				break;
-			case "/delete_phoneNumber":
+			case "delete_phoneNumber":
 				deletePhoneNumber(request, response);
 				break;
-			case "/edit":
-				//showEditForm(request, response);
+			case "insert_program":
+				insertProgram(request, response);	
+			case "edit_program":
+				editProgram(request,response);
+			case "delete_user":
+				deleteUser(request, response);
 				break;
 			default:
-				//listUser(request, response);
 				break;
 			}
 		} catch (SQLException ex) {
@@ -76,13 +73,14 @@ public class AdminServlet extends HttpServlet {
 		}
 	}
 	
+
 	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("name");
+		String username = request.getParameter("username");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
-		int role = Integer.parseInt(request.getParameter("name"));
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
+		int role = Integer.parseInt(request.getParameter("role"));
 		Admin newAdmin = new Admin(username, name, surname, password, role);
 		adminDao.insertAdmin(newAdmin);
 		response.sendRedirect("list");
@@ -90,10 +88,10 @@ public class AdminServlet extends HttpServlet {
 	
 	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("name");
+		String username = request.getParameter("username");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
 		int role = Integer.parseInt(request.getParameter("role"));
 		String AFM = request.getParameter("AFM");
 		Double balance = Double.parseDouble(request.getParameter("balance"));
@@ -105,10 +103,10 @@ public class AdminServlet extends HttpServlet {
 	
 	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("name");
+		String username = request.getParameter("username");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
 		int role = Integer.parseInt(request.getParameter("role"));
 		String company = request.getParameter("company");
 		Seller newSeller = new Seller(username, name, surname, password, role, company);
@@ -116,13 +114,6 @@ public class AdminServlet extends HttpServlet {
 		response.sendRedirect("list");
 	}
 
-//	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
-//			throws SQLException, IOException {
-//		String username = request.getParameter("username");
-//		//UserDao.deleteUser(username);
-//		response.sendRedirect("list");
-//	}
-	
 	private void insertPhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String phoneNumber = request.getParameter("phonenumber");
@@ -132,11 +123,52 @@ public class AdminServlet extends HttpServlet {
 		response.sendRedirect("list");
 	}
 	
+	
 	private void deletePhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String phoneNumber = request.getParameter("phonenumber");
 		phoneNumberDao.deleteNumber(phoneNumber);
 		response.sendRedirect("list");
+	}
+	
+	
+	private void insertProgram(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException  {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String name = request.getParameter("name");
+		int minutes = Integer.parseInt(request.getParameter("minutes"));
+		double baseCharge = Double.parseDouble(request.getParameter("baseCharge"));
+		double additionalCharge = Double.parseDouble(request.getParameter("additionalCharge"));
+		Program newProgram = new Program(id, name, minutes, baseCharge, additionalCharge);
+		programDao.insertProgram(newProgram);
+		response.sendRedirect("list");	
+	}
+	
+
+	private void editProgram(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+	    double baseCharge = Double.parseDouble(request.getParameter("baseCharge"));
+	    
+	    // Fetch the existing program
+	    Program program = programDao.getProgramById(id);
+	    
+	    // Update the base charge
+	    program.setBaseCharge(baseCharge);
+	    
+	    // Persist the updated program
+	    programDao.editProgram(program);
+	    
+	    response.sendRedirect("list"); 
+		
+	}
+
+	
+	
+	
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
