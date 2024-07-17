@@ -2,9 +2,6 @@ package mainpackage.users.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +14,6 @@ import mainpackage.users.dao.UserDao;
 import mainpackage.users.model.Admin;
 import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
-import mainpackage.users.model.User;
 import mainpackage.utils.dao.PhoneNumberDao;
 import mainpackage.utils.dao.ProgramDao;
 import mainpackage.utils.model.PhoneNumber;
@@ -30,6 +26,7 @@ public class AdminServlet extends HttpServlet {
 	private SellerDao sellerDao = new SellerDao();
 	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
 	private ProgramDao programDao = new ProgramDao();
+	private UserDao userDao = new UserDao();
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -66,6 +63,7 @@ public class AdminServlet extends HttpServlet {
 				deleteUser(request, response);
 				break;
 			default:
+				//listUser(request, response);
 				break;
 			}
 		} catch (SQLException ex) {
@@ -73,65 +71,68 @@ public class AdminServlet extends HttpServlet {
 		}
 	}
 	
-
 	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("username");
+		String username = request.getParameter("name");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("surname");
-		String password = request.getParameter("password");
-		int role = Integer.parseInt(request.getParameter("role"));
+		String surname = request.getParameter("name");
+		String password = request.getParameter("name");
+		int role = 1;
 		Admin newAdmin = new Admin(username, name, surname, password, role);
 		adminDao.insertAdmin(newAdmin);
-		response.sendRedirect("list");
+		response.sendRedirect("AdminPage.jsp");
 	}
 	
 	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("username");
+		String username = request.getParameter("name");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("surname");
-		String password = request.getParameter("password");
-		int role = Integer.parseInt(request.getParameter("role"));
+		String surname = request.getParameter("name");
+		String password = request.getParameter("name");
+		int role = 2;
 		String AFM = request.getParameter("AFM");
 		Double balance = Double.parseDouble(request.getParameter("balance"));
-		String phone_number = request.getParameter("phone_number");
-		
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phone_number);
+		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, PhoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("list");
+		response.sendRedirect("AdminPage.jsp");
 	}
 	
 	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("username");
+		String username = request.getParameter("name");
 		String name = request.getParameter("name");
-		String surname = request.getParameter("surname");
-		String password = request.getParameter("password");
-		int role = Integer.parseInt(request.getParameter("role"));
+		String surname = request.getParameter("name");
+		String password = request.getParameter("name");
+		int role = 3;
 		String company = request.getParameter("company");
 		Seller newSeller = new Seller(username, name, surname, password, role, company);
 		sellerDao.insertSeller(newSeller);
-		response.sendRedirect("list");
+		response.sendRedirect("AdminPage.jsp");
 	}
 
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		String username = request.getParameter("username");
+		userDao.deleteUser(username);
+		response.sendRedirect("ShowUsers.jsp");
+	}
+	
 	private void insertPhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String phoneNumber = request.getParameter("phonenumber");
 		int programId = Integer.parseInt(request.getParameter("programId"));
 		Program program = programDao.getProgramById(programId);
-		phoneNumberDao.insertNumber(phoneNumber, programId);
-		response.sendRedirect("list");
+		phoneNumberDao.insertNumber(phoneNumber, program);
+		response.sendRedirect("AdminPage.jsp");
 	}
-	
 	
 	private void deletePhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String phoneNumber = request.getParameter("phonenumber");
 		phoneNumberDao.deleteNumber(phoneNumber);
-		response.sendRedirect("list");
+		response.sendRedirect("AdminPage.jsp");
 	}
-	
 	
 	private void insertProgram(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException  {
@@ -142,32 +143,19 @@ public class AdminServlet extends HttpServlet {
 		double additionalCharge = Double.parseDouble(request.getParameter("additionalCharge"));
 		Program newProgram = new Program(id, name, minutes, baseCharge, additionalCharge);
 		programDao.insertProgram(newProgram);
-		response.sendRedirect("list");	
+		response.sendRedirect("AdminPage.jsp");	
 	}
 	
-
 	private void editProgram(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 	    double baseCharge = Double.parseDouble(request.getParameter("baseCharge"));
-	    
 	    // Fetch the existing program
 	    Program program = programDao.getProgramById(id);
-	    
 	    // Update the base charge
 	    program.setBaseCharge(baseCharge);
-	    
 	    // Persist the updated program
 	    programDao.editProgram(program);
-	    
-	    response.sendRedirect("list"); 
-		
-	}
-
-	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("username");
-		userDao.deleteUser(username);
-		response.sendRedirect("ShowUsers.jsp");
+	    response.sendRedirect("EditPrograms.jsp"); 
 	}
 }
