@@ -15,10 +15,6 @@ import mainpackage.users.dao.AdminDao;
 import mainpackage.users.dao.ClientDao;
 import mainpackage.users.dao.SellerDao;
 import mainpackage.users.dao.UserDao;
-import mainpackage.users.model.Admin;
-import mainpackage.users.model.Client;
-import mainpackage.users.model.Seller;
-import mainpackage.users.model.User;
 
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
