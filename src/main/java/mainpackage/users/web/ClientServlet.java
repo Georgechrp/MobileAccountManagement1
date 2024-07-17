@@ -57,8 +57,11 @@ public class ClientServlet extends HttpServlet {
 	                case "My Bill":
 	                    viewAccount(request, response);
 	                    break;
-		            case "payBill":
+		            case "Pay bill":
 	                    payBill(request, response);
+	                    break;
+		            case "Call history":
+		            	display_call_history(request, response);
 	                    break;
 	                default:
 	                    response.sendRedirect("index.jsp");
@@ -117,7 +120,7 @@ public class ClientServlet extends HttpServlet {
 	}
 	
 	private void display_call_history(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
-		RequestDispatcher dispatcher = request.getRequestDispatcher("call_history.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("CallHistory.jsp");
 		dispatcher.forward(request, response);
 	}
 }
