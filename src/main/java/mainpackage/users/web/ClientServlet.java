@@ -110,11 +110,25 @@ public class ClientServlet extends HttpServlet {
 	}
 	
 	private void display_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("username") == null) {
+			response.sendRedirect("login.jsp");
+			return;
+		}
+		String username = (String) session.getAttribute("username");
+		request.setAttribute("balance", clientDao.getBallance(username));
 		RequestDispatcher dispatcher = request.getRequestDispatcher("balance.jsp");
 		dispatcher.forward(request, response);
 	}
 	
 	private void set_balance(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("username") == null) {
+			response.sendRedirect("login.jsp");
+			return;
+		}
+		String username = (String) session.getAttribute("username");
+		clientDao.setBalance(username,Double.parseDouble((String) request.getAttribute("balance")));
 		RequestDispatcher dispatcher = request.getRequestDispatcher("balance.jsp");
 		dispatcher.forward(request, response);
 	}
