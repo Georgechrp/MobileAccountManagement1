@@ -17,19 +17,20 @@ public class ClientDao {
 	private String jdbcPassword = "root";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
-	//private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
+	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
 	private static final String INSERT_CLIENT_SQL = "INSERT INTO client (username, afm, balance, phone_number) VALUES (?, ?, ?, ?)";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
 	private static final String LOGIN_CLIENT_SQL = "SELECT * FROM client WHERE username = ?;";
-	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM program WHERE id = ?";
+	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM programs WHERE id = ?";
 	private static final String GET_CLIENTS_SQL = "SELECT user.username, user.password, user.first_name, user.surname, user.role, client.afm,\r\n"
-			+ "client.balance, client.phone_number, program.id, program.name, program.minutes,\r\n"
+			+ "client.balance, client.phone_number, phone_number.programid, program.name, program.minutes,\r\n"
 			+ "program.basecharge, program.additionalcharge\r\n"
 			+ "FROM user\r\n"
-			+ "INNER JOIN client ON user.username=client.username\r\n";
-
-	
-	private static final String UPDATE_PROGRAM_SQL = "UPDATE phone_number SET programid = ? WHERE number = (SELECT phone_number FROM client WHERE afm = ?)";
+			+ "INNER JOIN client ON user.username=client.username\r\n"
+			+ "INNER JOIN phone_number ON client.phone_number=phone_number.number\r\n"
+			+ "INNER JOIN program ON phone_number.programid=program.id;";
+	private static final String GET_NUM_BY_AFM_SQL = "SELECT phone_number FROM client WHERE afm = ?";
+	private static final String UPDATE_PROGRAM_SQL = "UPDATE phone_number SET programid = ?,WHERE number = ?;";
 	
 
 	public ClientDao() {
@@ -49,80 +50,36 @@ public class ClientDao {
 		}
 		return connection;
 	}
-	
 
 	public void insertClient(Client client) throws SQLException {
-	    System.out.println(INSERT_CLIENT_SQL);
-	    System.out.println(INSERT_USER_SQL);
-
-	    try (Connection connection = getConnection();
-	         PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
-	         //PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
-	         PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
-
-	        // Insert into user table
-	        userStatement.setString(1, client.getUsername());
-	        userStatement.setString(2, client.getName());
-	        userStatement.setString(3, client.getSurname());
-	        userStatement.setString(4, client.getPassword());
-	        userStatement.setInt(5, client.getRole());
-	        userStatement.executeUpdate();
-
-	        
-
-	       
-	       
-
-	            // Insert into client table
-	            clientStatement.setString(1, client.getUsername());
-	            clientStatement.setString(2, client.getAFM());
-	            clientStatement.setDouble(3, client.getBalance());
-	            clientStatement.setString(4, client.getPhoneNumber());
-	            clientStatement.executeUpdate();
-	        
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        throw new SQLException("Error inserting client", e);
-	    }
+		System.out.println(INSERT_CLIENT_SQL);
+		System.out.println(INSERT_USER_SQL);
+		// try-with-resource statement will auto close the connection.
+		try (Connection connection = getConnection();
+				PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
+				PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
+	            PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
+			userStatement.setString(1, client.getUsername());
+            userStatement.setString(4, client.getPassword());
+            userStatement.setString(2, client.getName());
+            userStatement.setString(3, client.getSurname());
+            userStatement.setInt(5,client.getRole());
+            userStatement.executeUpdate();
+            
+            numberStatement.setString(2, client.getPhoneNumber().getNumber());
+            numberStatement.setInt(1, 0);
+            numberStatement.executeUpdate();
+            
+            // Set parameters for student table
+            clientStatement.setString(1, client.getUsername());
+            clientStatement.setString(2, client.getAFM());
+            clientStatement.setString(4, client.getPhoneNumber().getNumber());
+            clientStatement.setDouble(3, 0.0);
+            clientStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
-	
-	/*public void insertClient(Client client) throws SQLException {
-	    System.out.println(INSERT_CLIENT_SQL);
-	    System.out.println(INSERT_USER_SQL);
-
-	    try (Connection connection = getConnection();
-	         PreparedStatement userStatement = connection.prepareStatement(INSERT_USER_SQL);
-	         PreparedStatement numberStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL);
-	         PreparedStatement clientStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
-
-	        // Insert into user table
-	        userStatement.setString(1, client.getUsername());
-	        userStatement.setString(2, client.getName());
-	        userStatement.setString(3, client.getSurname());
-	        userStatement.setString(4, client.getPassword());
-	        userStatement.setInt(5, client.getRole());
-	        userStatement.executeUpdate();
-
-	        // Insert into phone_number table
-	        numberStatement.setInt(1, client.getPhoneNumber().getProgram() != null ? client.getPhoneNumber().getProgram().getId() : null);
-	        numberStatement.setString(2, client.getPhoneNumber().getNumber());
-	        numberStatement.executeUpdate();
-
-	        // Insert into client table
-	        clientStatement.setString(1, client.getUsername());
-	        clientStatement.setString(2, client.getAFM());
-	        clientStatement.setDouble(3, client.getBalance());
-	        clientStatement.setString(4, client.getPhoneNumber().getNumber());
-	        clientStatement.executeUpdate();
-
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        throw new SQLException("Error inserting client", e);
-	    }
-	}*/
-
-
 	
 	public Client setClient(String username) {
 		try (Connection connection = getConnection();
@@ -170,9 +127,9 @@ public class ClientDao {
 		                            }
 		                        }
 		                        
+		                        PhoneNumber phoneNumber = new PhoneNumber(phone_number, program);
 		                        
-		                        
-								return new Client(uname, name, surname, password, role, afm, balance, phone_number);
+								return new Client(uname, name, surname, password, role, afm, balance, phoneNumber);
 		                    } else {
 		                        // Handle case where no results are found in student query
 		                        System.out.println("No client found with the provided username.");
@@ -215,9 +172,9 @@ public class ClientDao {
 				Double baseCharge = resultSet.getDouble("program.basecharge");
 				Double additionalCharge = resultSet.getDouble("program.additionalcharge");
 				Program program = new Program (id, program_name,  minutes, baseCharge, additionalCharge);
-				
+				PhoneNumber phoneNumber = new PhoneNumber (phone_number, program);
 
-				Client c1 = new Client(username, name, surname, password, role, AFM,  balance, phone_number);
+				Client c1 = new Client(username, name, surname, password, role, AFM,  balance, phoneNumber);
 				clients.add(c1);
 			}
 			System.out.println(preparedStatement);
@@ -227,16 +184,24 @@ public class ClientDao {
 		}
 		return clients;
 	}
-	public void changeProgram(String clientAFM, int programId) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROGRAM_SQL)) {
-            preparedStatement.setInt(1, programId);
-            preparedStatement.setString(2, clientAFM);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-	
+	public void changeProgram(String clientAFM, int programId) {
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROGRAM_SQL);
+				PreparedStatement phoneNumStatement = connection.prepareStatement(GET_NUM_BY_AFM_SQL)) {
+				phoneNumStatement.setString(1, clientAFM);
+				ResultSet rs = phoneNumStatement.executeQuery();
+				String phoneNumber = "";
+				if(rs.next()) {
+					phoneNumber = rs.getString("phone_number");
+				} else {
+					System.out.println("No client with afm: " + clientAFM + " found");
+				}
+	            preparedStatement.setInt(1, programId);
+	            preparedStatement.setString(2, phoneNumber);
+	            preparedStatement.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	}
 }
