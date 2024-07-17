@@ -63,5 +63,29 @@ public class UserDao {
         }
         
     }
-    
+
+	public void deleteUser(String username) {
+		try (Connection connection = getConnection();
+				PreparedStatement roleStatement = connection.prepareStatement(ROLE_USERNAME_SQL)){
+			ResultSet rs = roleStatement.executeQuery();
+			int role = 0;
+			if(rs.next()) {
+				role = rs.getInt("role");
+			}
+			if (role == 2) {
+				PreparedStatement clientDelete = connection.prepareStatement(DELETE_CLIENT_SQL);
+				clientDelete.setString(1,username);
+				clientDelete.executeQuery();
+			} else if (role == 3) {
+				PreparedStatement sellerDelete = connection.prepareStatement(DELETE_SELLER_SQL);
+				sellerDelete.setString(1,username);
+				sellerDelete.executeQuery();
+			}
+			PreparedStatement userDelete = connection.prepareStatement(DELETE_USER_SQL);
+			userDelete.setString(1,username);
+			userDelete.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
