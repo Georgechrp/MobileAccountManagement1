@@ -35,13 +35,13 @@ public class PhoneNumberDao {
 		return connection;
 	}
 
-	public void insertNumber(String phoneNumber, int programId) throws SQLException {
+	public void insertNumber(String phoneNumber, Program program) throws SQLException {
 		System.out.println(INSERT_PHONENUMBER_SQL);
 		// try-with-resource statement will auto close the connection.
-		PhoneNumber phoNum = new PhoneNumber(phoneNumber, programId);
+		PhoneNumber phoNum = new PhoneNumber(phoneNumber, program);
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL)) {
-			preparedStatement.setInt(1, phoNum.getProgramId());
+			preparedStatement.setInt(1, phoNum.getProgram().getId());
 			preparedStatement.setString(2, phoNum.getNumber());
 			
 			System.out.println(preparedStatement);
