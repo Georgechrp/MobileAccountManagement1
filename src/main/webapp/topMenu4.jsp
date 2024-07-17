@@ -1,7 +1,7 @@
 <div id="top-menu">
     <ul>
         <li>
-            <form id="top" action="AdminMain.jsp" method="get">
+            <form id="top" action="AdminPage.jsp" method="get">
                 <input class="top" type="submit" value="Main Page">
             </form>
         </li>
