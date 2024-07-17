@@ -164,14 +164,10 @@ public class AdminServlet extends HttpServlet {
 		
 	}
 
-	
-	
-	
-	private void deleteUser(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		String username = request.getParameter("username");
+		userDao.deleteUser(username);
+		response.sendRedirect("ShowUsers.jsp");
 	}
-	
-	
-
 }
