@@ -99,24 +99,4 @@ public class SellerDao {
 		        }
 		    }
 	}
-	
-	 public List<Bill> getCustomerBills(String username) throws SQLException {
-	        List<Bill> bills = new ArrayList<>();
-	        String SELECT_BILLS_SQL = "SELECT * FROM bills WHERE username = ?";
-	        try (Connection connection = getConnection();
-	             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILLS_SQL)) {
-	            preparedStatement.setString(1, username);
-	            ResultSet resultSet = preparedStatement.executeQuery();
-	            while (resultSet.next()) {
-	                Bill bill = new Bill(
-	                    resultSet.getString("bill_id"),
-	                    resultSet.getString("username"),
-	                    resultSet.getInt("billing_month"),
-	                    resultSet.getInt("number_of_calls")
-	                );
-	                bills.add(bill);
-	            }
-	        }
-	        return bills;
-	    }
 }
