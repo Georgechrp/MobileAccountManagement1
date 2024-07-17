@@ -14,7 +14,7 @@ public class ProgramDao {
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "root";
 
-	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
+	private static final String INSERT_PROGRAM_SQL = "INSERT INTO program" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
 	
 	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
@@ -86,35 +86,33 @@ public class ProgramDao {
 
 	public Program getProgramById(int id) {
 		Program program = null;
-	    try (Connection connection = getConnection();
-	        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROGRAM_BY_ID)) {
-	        preparedStatement.setInt(1, id);
-	        ResultSet rs = preparedStatement.executeQuery();
-	        
-	        if (rs.next()) {
-	            String name = rs.getString("program_name");
-	            int minutes = rs.getInt("minutes");
-	            double baseCharge = rs.getDouble("base_charge");
-	            double additionalCharge = rs.getDouble("additional_charge");
-	            program = new Program(id, name, minutes, baseCharge, additionalCharge);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return program;
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROGRAM_BY_ID)) {
+			preparedStatement.setInt(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				String name = rs.getString("program_name");
+				int minutes = rs.getInt("minutes");
+				double baseCharge = rs.getDouble("base_charge");
+				double additionalCharge = rs.getDouble("additional_charge");
+				program = new Program(id, name, minutes, baseCharge, additionalCharge);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				}
+		return program;
 	}
-	
+
 	public void editProgram(Program program) {
 		System.out.println(UPDATE_PROGRAM_SQL);
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROGRAM_SQL)) {
 			preparedStatement.setDouble(1, program.getBaseCharge());
-	        preparedStatement.setInt(2, program.getId());
+			preparedStatement.setInt(2, program.getId());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getStackTrace());
 		}
 	}
-	
 }
