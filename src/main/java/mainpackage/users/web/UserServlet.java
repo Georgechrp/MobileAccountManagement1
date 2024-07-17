@@ -70,7 +70,7 @@ public class UserServlet extends HttpServlet {
 			adminDao.setAdmin(username);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminPage.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == -1){
 			HttpSession session = request.getSession();
