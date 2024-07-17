@@ -56,14 +56,20 @@ public class UserServlet extends HttpServlet {
 		int role = userDao.login(username,password);
 		if (role == 2) {
 			clientDao.setClient(username);
+			HttpSession session = request.getSession();
+			session.setAttribute("username", username);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ClientMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == 3) {
 			sellerDao.setSeller(username);
+			HttpSession session = request.getSession();
+			session.setAttribute("username", username);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == 1) {
 			adminDao.setAdmin(username);
+			HttpSession session = request.getSession();
+			session.setAttribute("username", username);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == -1){
@@ -83,6 +89,10 @@ public class UserServlet extends HttpServlet {
 	
 	
 	public void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+		 HttpSession session = request.getSession(false);
+	        if (session != null) {
+	            session.invalidate(); // Invalidate the session
+	        }
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}

@@ -39,7 +39,7 @@ public class AdminServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String action = request.getServletPath();
+		String action = request.getParameter("action");
 
 		try {
 			switch (action) {
@@ -95,8 +95,9 @@ public class AdminServlet extends HttpServlet {
 		int role = Integer.parseInt(request.getParameter("role"));
 		String AFM = request.getParameter("AFM");
 		Double balance = Double.parseDouble(request.getParameter("balance"));
-		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, PhoneNumber);
+		String phone_number = request.getParameter("phone_number");
+		
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phone_number);
 		clientDao.insertClient(newClient);
 		response.sendRedirect("list");
 	}
@@ -119,7 +120,7 @@ public class AdminServlet extends HttpServlet {
 		String phoneNumber = request.getParameter("phonenumber");
 		int programId = Integer.parseInt(request.getParameter("programId"));
 		Program program = programDao.getProgramById(programId);
-		phoneNumberDao.insertNumber(phoneNumber, program);
+		phoneNumberDao.insertNumber(phoneNumber, programId);
 		response.sendRedirect("list");
 	}
 	

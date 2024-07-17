@@ -5,13 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import mainpackage.users.model.Seller;
+import mainpackage.utils.model.Bill;
 
 public class SellerDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SELLER_SQL = "INSERT INTO seller (username, company) VALUES (?, ?)";
@@ -96,4 +99,24 @@ public class SellerDao {
 		        }
 		    }
 	}
+	
+	 public List<Bill> getCustomerBills(String username) throws SQLException {
+	        List<Bill> bills = new ArrayList<>();
+	        String SELECT_BILLS_SQL = "SELECT * FROM bills WHERE username = ?";
+	        try (Connection connection = getConnection();
+	             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILLS_SQL)) {
+	            preparedStatement.setString(1, username);
+	            ResultSet resultSet = preparedStatement.executeQuery();
+	            while (resultSet.next()) {
+	                Bill bill = new Bill(
+	                    resultSet.getString("bill_id"),
+	                    resultSet.getString("username"),
+	                    resultSet.getInt("billing_month"),
+	                    resultSet.getInt("number_of_calls")
+	                );
+	                bills.add(bill);
+	            }
+	        }
+	        return bills;
+	    }
 }

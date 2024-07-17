@@ -5,14 +5,25 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Seller Page</title>
+<title>Client Page</title>
 <link href="styles.css" rel="stylesheet" type="text/css" >
 </head>
 <body>
 <div class="content">
-        <h1>Hello seller</h1>
-        <br><br>
-        <p>This is your main page</p></div>
+        <%
+        String username = (String) session.getAttribute("username");
+
+        if ( username != null) {
+    %>
+    <h1>Welcome, <%= username %>!</h1>
+    <%
+        } else {
+    %>
+    <p>Please <a href="login.jsp">login</a>.</p>
+    <%
+        }
+    %>
+        </div>
 
 
 </body>

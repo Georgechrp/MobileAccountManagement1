@@ -1,6 +1,7 @@
 package mainpackage.users.web;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import mainpackage.utils.dao.BillDao;
 import mainpackage.utils.dao.CallDao;
 import mainpackage.utils.dao.PhoneNumberDao;
 import mainpackage.utils.dao.ProgramDao;
+import mainpackage.utils.model.Bill;
 import mainpackage.utils.model.Call;
 import mainpackage.utils.model.PhoneNumber;
 
@@ -52,6 +54,13 @@ public class ClientServlet extends HttpServlet {
 		                displayCallHistory(request, response);
 		                break;
 		            // other cases...
+		            case "My Bill":
+	                    viewAccount(request, response);
+	                    break;
+		            case "payBill":
+	                    payBill(request, response);
+	                    break;
+		            
 		            default:
 		                response.getWriter().println("Unknown action: " + action);
 		                break;
@@ -70,6 +79,9 @@ public class ClientServlet extends HttpServlet {
 	                case "listUser":
 	                    listUser(request, response);
 	                    break;
+	                case "viewAccount":
+	                    viewAccount(request, response);
+	                    break;
 	                // Add more cases as needed
 	                default:
 	                    response.sendRedirect("index.jsp");
@@ -79,6 +91,7 @@ public class ClientServlet extends HttpServlet {
 	            throw new ServletException(e);
 	        }
 	    }
+	 
 	
 	private void registerClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
@@ -87,13 +100,16 @@ public class ClientServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String AFM = request.getParameter("afm");
 		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
-		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
+		String phone_number = request.getParameter("phone_number");
+		
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
+		
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phone_number);
 		clientDao.insertClient(newClient);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 	    dispatcher.forward(request, response);
 	}
+	 
 	
 	
 	private void display_programs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -134,11 +150,34 @@ public class ClientServlet extends HttpServlet {
 	    dispatcher.forward(request, response);
 	}
 	
+	 private void viewAccount(HttpServletRequest request, HttpServletResponse response)
+	            throws SQLException, IOException, ServletException {
+	        HttpSession session = request.getSession(false);
+	        if (session == null || session.getAttribute("username") == null) {
+	            response.sendRedirect("login.jsp");
+	            return;
+	        }
+	        String username = (String) session.getAttribute("username");
+	        Bill bill = billDao.selectBillByUsername(username); // Fetch the bill based on the username
+	        request.setAttribute("bill", bill);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("Account.jsp"); // Forward to account.jsp
+	        dispatcher.forward(request, response);
+	    }
+	 
+	 private void payBill(HttpServletRequest request, HttpServletResponse response)
+		        throws SQLException, IOException, ServletException {
+		    String billId = request.getParameter("bill_id");
+		    billDao.payBill(billId);
+		    billDao.deleteBill(billId); // Remove the bill after payment
+		    response.sendRedirect("Account.jsp");
+		}
+	 
 	
 	private void display_account(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("account.jsp");
 		dispatcher.forward(request, response);
 	}
+	 
 	
 	
     private void pay_bill(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -157,5 +196,6 @@ public class ClientServlet extends HttpServlet {
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
 	    dispatcher.forward(request, response);
 	}
+    
 
 }

@@ -12,16 +12,15 @@ import mainpackage.utils.model.Program;
 public class ProgramDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
-	private static final String INSERT_PROGRAM_SQL = "INSERT INTO program" 
+	private static final String INSERT_PROGRAM_SQL = "INSERT INTO programs" 
 	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
 	
+	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
+	private static final String UPDATE_PROGRAM_SQL = "UPDATE program SET base_charge = ? WHERE program_id = ?; ";
 	private static final String SELECT_PROGRAM_BY_ID = "SELECT * FROM program WHERE program_id = ?;";
 	
-	private static final String UPDATE_PROGRAM_SQL = "UPDATE program SET base_charge = ? WHERE program_id = ?; ";			
-	
-	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
 	
 	
 
@@ -46,6 +45,7 @@ public class ProgramDao {
 	
 	public void insertProgram(Program program) {
 		System.out.println(INSERT_PROGRAM_SQL);
+		// try-with-resource statement will auto close the connection.
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
 			preparedStatement.setInt(1, program.getId());
@@ -60,11 +60,34 @@ public class ProgramDao {
 		}
 	}
 	
-	
+	public ArrayList<Program> getPrograms() throws SQLException {
+		System.out.println(GET_PROGRAMS_SQL);
+		ArrayList<Program> programs = new ArrayList<Program>();
+		// try-with-resource statement will auto close the connection.
+		try (Connection connection = getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(GET_PROGRAMS_SQL);
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+			
+			while(resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				int minutes = resultSet.getInt("minutes");
+				Double basecharge = resultSet.getDouble("basecharge");
+				Double additionalcharge = resultSet.getDouble("additionalcharge");
+				Program p1 = new Program(id,name,minutes,basecharge,additionalcharge);
+				programs.add(p1);
+			}
+			System.out.println(preparedStatement);
+		} catch (SQLException e) {
+			System.out.println(e.getStackTrace());
+		}
+		return programs;
+	}
+
 	public Program getProgramById(int id) {
 		Program program = null;
 	    try (Connection connection = getConnection();
-	            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROGRAM_BY_ID)) {
+	        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROGRAM_BY_ID)) {
 	        preparedStatement.setInt(1, id);
 	        ResultSet rs = preparedStatement.executeQuery();
 	        
@@ -94,29 +117,4 @@ public class ProgramDao {
 		}
 	}
 	
-	
-	public ArrayList<Program> getPrograms() throws SQLException {
-		System.out.println(GET_PROGRAMS_SQL);
-		ArrayList<Program> programs = new ArrayList<Program>();
-		try (Connection connection = getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(GET_PROGRAMS_SQL);
-			ResultSet resultSet = preparedStatement.executeQuery()) {
-			
-			while(resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String name = resultSet.getString("name");
-				int minutes = resultSet.getInt("minutes");
-				Double basecharge = resultSet.getDouble("basecharge");
-				Double additionalcharge = resultSet.getDouble("additionalcharge");
-				Program p1 = new Program(id,name,minutes,basecharge,additionalcharge);
-				programs.add(p1);
-			}
-			System.out.println(preparedStatement);
-		} catch (SQLException e) {
-			System.out.println(e.getStackTrace());
-		}
-		return programs;
-	}
-
-
 }

@@ -11,9 +11,9 @@ import mainpackage.utils.model.Program;
 public class PhoneNumberDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
-	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_numbers" 
+	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number" 
 	+ "  (program_id,  phone_number) VALUES ( ?, ?); ";
 	
 
@@ -35,13 +35,13 @@ public class PhoneNumberDao {
 		return connection;
 	}
 
-	public void insertNumber(String phoneNumber, Program program) throws SQLException {
+	public void insertNumber(String phoneNumber, int programId) throws SQLException {
 		System.out.println(INSERT_PHONENUMBER_SQL);
 		// try-with-resource statement will auto close the connection.
-		PhoneNumber phoNum = new PhoneNumber(phoneNumber, program);
+		PhoneNumber phoNum = new PhoneNumber(phoneNumber, programId);
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PHONENUMBER_SQL)) {
-			preparedStatement.setInt(1, phoNum.getProgram().getId());
+			preparedStatement.setInt(1, phoNum.getProgramId());
 			preparedStatement.setString(2, phoNum.getNumber());
 			
 			System.out.println(preparedStatement);

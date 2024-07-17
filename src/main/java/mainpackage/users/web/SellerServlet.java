@@ -3,6 +3,7 @@ package mainpackage.users.web;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +15,10 @@ import mainpackage.users.dao.ClientDao;
 import mainpackage.users.dao.SellerDao;
 import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
+import mainpackage.utils.dao.BillDao;
 import mainpackage.utils.dao.PhoneNumberDao;
 import mainpackage.utils.dao.ProgramDao;
+import mainpackage.utils.model.Bill;
 import mainpackage.utils.model.PhoneNumber;
 import mainpackage.utils.model.Program;
 
@@ -25,6 +28,7 @@ public class SellerServlet extends HttpServlet {
 	private ClientDao clientDao = new ClientDao();
 	private PhoneNumberDao phoneNumberDao = new PhoneNumberDao();
 	private ProgramDao programDao = new ProgramDao();
+	private BillDao billDao = new BillDao();
 	
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,20 +60,43 @@ public class SellerServlet extends HttpServlet {
 			case "Match Client":
 				matchClient(request, response);
 				break;
-			case "Match":
-				changeProgram(request, response);
-				break;
+			case "matchClientProgram":
+                matchClientToProgram(request, response);
+                break;
+			 case "Generate Invoices":
+                 generateInvoice(request, response);
+                 break;
+			 case "listClientsAndPrograms":
+                 listClientsAndPrograms(request, response);
+                 break;
 			}
 		} catch (SQLException ex) {
 			throw new ServletException(ex);
 		}
+		
 	}
+	 private void listClientsAndPrograms(HttpServletRequest request, HttpServletResponse response)
+	            throws SQLException, IOException, ServletException {
+	        List<Client> clients = clientDao.getClients();
+	        List<Program> programs = programDao.getPrograms();
+	        request.setAttribute("clients", clients);
+	        request.setAttribute("programs", programs);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("MatchClient.jsp");
+	        dispatcher.forward(request, response);
+	    }
 	
-	private void changeProgram(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		clientDao.changeProgram(request.getParameter("number"),Integer.parseInt(request.getParameter("program")));
-		RequestDispatcher dispatcher = request.getRequestDispatcher("MatchClient.jsp");
-		dispatcher.forward(request, response);
-	}
+	 
+	 private void matchClientToProgram(HttpServletRequest request, HttpServletResponse response)
+	            throws SQLException, IOException, ServletException {
+	        String clientAFM = request.getParameter("client");
+	        int programId = Integer.parseInt(request.getParameter("program"));
+
+	        // Change the program for the client
+	        clientDao.changeProgram(clientAFM, programId);
+
+	        // Redirect back to a success page or the form page with a success message
+	        response.sendRedirect("SellerMain.jsp");
+	    }
 
 
 	private void insertNewClient(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -79,9 +106,11 @@ public class SellerServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String AFM = request.getParameter("afm");
 		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
-		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
+		String phone_number = request.getParameter("phone_number");
+		
+		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phone_number);
+		
 		clientDao.insertClient(newClient);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
 	    dispatcher.forward(request, response);
@@ -114,6 +143,14 @@ public class SellerServlet extends HttpServlet {
 	    request.setAttribute("programs", programs);
 	    request.getRequestDispatcher("/ShowPrograms.jsp").forward(request, response);
 	}
+	 private void generateInvoice(HttpServletRequest request, HttpServletResponse response)
+	            throws SQLException, IOException, ServletException {
+	        String username = request.getParameter("username");
+	        List<Bill> bills = billDao.getCustomerBills(username);
+	        request.setAttribute("bills", bills);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("Invoice.jsp");
+	        dispatcher.forward(request, response);
+	    }
 
 	
     public SellerServlet() {
