@@ -14,7 +14,7 @@ import mainpackage.utils.model.Program;
 public class ClientDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
@@ -24,13 +24,12 @@ public class ClientDao {
 	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM programs WHERE id = ?";
 	private static final String GET_CLIENTS_SQL = "SELECT user.username, user.password, user.first_name, user.surname, user.role, client.afm,\r\n"
 			+ "client.balance, client.phone_number, phone_number.programid, program.name, program.minutes,\r\n"
-			+ "program.basecharge, program.additionalcharge\r\n"
-			+ "FROM user\r\n"
+			+ "program.basecharge, program.additionalcharge FROM user\r\n"
 			+ "INNER JOIN client ON user.username=client.username\r\n"
 			+ "INNER JOIN phone_number ON client.phone_number=phone_number.number\r\n"
 			+ "INNER JOIN program ON phone_number.programid=program.id;";
 	private static final String GET_NUM_BY_AFM_SQL = "SELECT phone_number FROM client WHERE afm = ?";
-	private static final String UPDATE_PROGRAM_SQL = "UPDATE phone_number SET programid = ?,WHERE number = ?;";
+	private static final String UPDATE_PROGRAM_SQL = "UPDATE phone_number SET programid = ? WHERE number = ?;";
 	
 
 	public ClientDao() {
