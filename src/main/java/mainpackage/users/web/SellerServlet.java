@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mainpackage.users.dao.ClientDao;
+import mainpackage.users.dao.Ipassword;
 import mainpackage.users.dao.SellerDao;
 import mainpackage.users.model.Client;
 import mainpackage.users.model.Seller;
@@ -77,7 +78,8 @@ public class SellerServlet extends HttpServlet {
 		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
 		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
 		int role = 2;
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, phoneNumber);
+		String hashedPassword = Ipassword.hashPassword(password);
+		Client newClient = new Client(username, name, surname, hashedPassword, role, AFM, balance, phoneNumber);
 		clientDao.insertClient(newClient);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("SellerMain.jsp");
 	    dispatcher.forward(request, response);
@@ -111,7 +113,9 @@ public class SellerServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String company = request.getParameter("company");
 		int role = 3;
-		Seller newSeller = new Seller(username, name, surname, password, role, company);
+		String hashedPassword = Ipassword.hashPassword(password);
+		
+		Seller newSeller = new Seller(username, name, surname, hashedPassword, role, company);
 		sellerDao.insertSeller(newSeller);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 	    dispatcher.forward(request, response);

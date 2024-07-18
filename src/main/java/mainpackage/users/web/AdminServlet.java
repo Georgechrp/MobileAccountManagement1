@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import mainpackage.users.dao.AdminDao;
 import mainpackage.users.dao.ClientDao;
+import mainpackage.users.dao.Ipassword;
 import mainpackage.users.dao.SellerDao;
 import mainpackage.users.dao.UserDao;
 import mainpackage.users.model.Admin;
@@ -85,9 +86,10 @@ public class AdminServlet extends HttpServlet {
 		String surname = request.getParameter("name");
 		String password = request.getParameter("name");
 		int role = 1;
-		Admin newAdmin = new Admin(username, name, surname, password, role);
+		String hashedPassword = Ipassword.hashPassword(password);
+		Admin newAdmin = new Admin(username, name, surname, hashedPassword, role);
 		adminDao.insertAdmin(newAdmin);
-		response.sendRedirect("AdminPage.jsp");
+		response.sendRedirect("AdminMain.jsp");
 	}
 	
 	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
@@ -100,9 +102,10 @@ public class AdminServlet extends HttpServlet {
 		String AFM = request.getParameter("AFM");
 		Double balance = Double.parseDouble(request.getParameter("balance"));
 		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
-		Client newClient = new Client(username, name, surname, password, role, AFM, balance, PhoneNumber);
+		String hashedPassword = Ipassword.hashPassword(password);
+		Client newClient = new Client(username, name, surname, hashedPassword, role, AFM, balance, PhoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("AdminPage.jsp");
+		response.sendRedirect("AdminMain.jsp");
 	}
 	
 	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
@@ -113,9 +116,10 @@ public class AdminServlet extends HttpServlet {
 		String password = request.getParameter("name");
 		int role = 3;
 		String company = request.getParameter("company");
-		Seller newSeller = new Seller(username, name, surname, password, role, company);
+		String hashedPassword = Ipassword.hashPassword(password);
+		Seller newSeller = new Seller(username, name, surname, hashedPassword, role, company);
 		sellerDao.insertSeller(newSeller);
-		response.sendRedirect("AdminPage.jsp");
+		response.sendRedirect("AdminMain.jsp");
 	}
 
 	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
@@ -131,14 +135,14 @@ public class AdminServlet extends HttpServlet {
 		int programId = Integer.parseInt(request.getParameter("programId"));
 		Program program = programDao.getProgramById(programId);
 		phoneNumberDao.insertNumber(phoneNumber, program);
-		response.sendRedirect("AdminPage.jsp");
+		response.sendRedirect("AdminMain.jsp");
 	}
 	
 	private void deletePhoneNumber(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
 		String phoneNumber = request.getParameter("phonenumber");
 		phoneNumberDao.deleteNumber(phoneNumber);
-		response.sendRedirect("AdminPage.jsp");
+		response.sendRedirect("AdminMain.jsp");
 	}
 	
 	private void insertProgram(HttpServletRequest request, HttpServletResponse response) 
@@ -150,7 +154,7 @@ public class AdminServlet extends HttpServlet {
 		double additionalCharge = Double.parseDouble(request.getParameter("additionalCharge"));
 		Program newProgram = new Program(id, name, minutes, baseCharge, additionalCharge);
 		programDao.insertProgram(newProgram);
-		response.sendRedirect("AdminPage.jsp");	
+		response.sendRedirect("AdminMain.jsp");	
 	}
 	
 	private void editProgram(HttpServletRequest request, HttpServletResponse response) 

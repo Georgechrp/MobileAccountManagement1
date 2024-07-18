@@ -13,8 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import mainpackage.users.dao.AdminDao;
 import mainpackage.users.dao.ClientDao;
+import mainpackage.users.dao.Ipassword;
 import mainpackage.users.dao.SellerDao;
 import mainpackage.users.dao.UserDao;
+import mainpackage.users.model.Client;
 
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -48,8 +50,9 @@ public class UserServlet extends HttpServlet {
 	public void login (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String hashedPassword = Ipassword.hashPassword(password);
 		System.out.println("Attempting login for user: " + username);
-		int role = userDao.login(username,password);
+		int role = userDao.login(username,hashedPassword);
 		if (role == 2) {
 			clientDao.setClient(username);
 			HttpSession session = request.getSession();
@@ -66,7 +69,7 @@ public class UserServlet extends HttpServlet {
 			adminDao.setAdmin(username);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminPage.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
 			dispatcher.forward(request, response);
 		} else if (role == -1){
 			HttpSession session = request.getSession();
