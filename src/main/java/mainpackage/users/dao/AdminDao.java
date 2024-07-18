@@ -10,7 +10,7 @@ import mainpackage.users.model.Admin;
 public class AdminDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_ADMIN_SQL = "INSERT INTO users" 
 	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); ";

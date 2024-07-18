@@ -11,11 +11,14 @@ import javax.servlet.ServletException;
 public class UserDao {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String JDBC_USER = "root";
-	private String JDBC_PASSWORD = "root";
+	private String JDBC_PASSWORD = "L1ok3y20";
     
     private static final String LOGIN_VALIDATION_PASSWORD_SQL = "SELECT role FROM user WHERE username = ? AND password = ?;";
-    
     private static final String LOGIN_VALIDATION_USERNAME_SQL = "SELECT role FROM user WHERE username = ? ;";
+    private static final String ROLE_USERNAME_SQL = "SELECT role FROM user WHERE username = ?;";
+    private static final String DELETE_CLIENT_SQL = "DELETE FROM client WHERE username = ?;";
+    private static final String DELETE_SELLER_SQL = "DELETE FROM seller WHERE username = ?;";
+    private static final String DELETE_USER_SQL = "DELETE FROM user WHERE username = ?;";
 
     protected Connection getConnection() {
 

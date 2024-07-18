@@ -2,6 +2,8 @@ package mainpackage.users.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -57,10 +59,15 @@ public class AdminServlet extends HttpServlet {
 				break;
 			case "insert_program":
 				insertProgram(request, response);	
+				break;
 			case "edit_program":
 				editProgram(request,response);
+				break;
 			case "delete_user":
 				deleteUser(request, response);
+				break;
+			case "Edit Programs":
+				showPrograms(request, response);
 				break;
 			default:
 				//listUser(request, response);
@@ -157,5 +164,11 @@ public class AdminServlet extends HttpServlet {
 	    // Persist the updated program
 	    programDao.editProgram(program);
 	    response.sendRedirect("EditPrograms.jsp"); 
+	}
+	
+	private void showPrograms(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+	    ArrayList<Program> programs = programDao.getPrograms();
+	    request.setAttribute("programs", programs);
+	    request.getRequestDispatcher("EditPrograms.jsp").forward(request, response);
 	}
 }

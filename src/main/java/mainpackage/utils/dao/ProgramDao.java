@@ -12,15 +12,13 @@ import mainpackage.utils.model.Program;
 public class ProgramDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_PROGRAM_SQL = "INSERT INTO program" 
-	+ "  (program_id, program_name, base_charge, additional_charge, minutes) VALUES (?, ?, ?, ?, ?); ";
-	
+	+ "(id, name, minutes, basecharge, additionalcharge) VALUES (?, ?, ?, ?, ?); ";
+	private static final String UPDATE_PROGRAM_SQL = "UPDATE program SET basecharge = ? WHERE id = ?; ";
 	private static final String GET_PROGRAMS_SQL = "SELECT * FROM program; ";
-	private static final String UPDATE_PROGRAM_SQL = "UPDATE program SET base_charge = ? WHERE program_id = ?; ";
-	private static final String SELECT_PROGRAM_BY_ID = "SELECT * FROM program WHERE program_id = ?;";
-	
+	private static final String SELECT_PROGRAM_BY_ID = "SELECT * FROM program WHERE id = ?;";
 	
 	
 
@@ -50,13 +48,13 @@ public class ProgramDao {
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROGRAM_SQL)) {
 			preparedStatement.setInt(1, program.getId());
 			preparedStatement.setString(2, program.getName());
-			preparedStatement.setDouble(3, program.getBaseCharge());
-			preparedStatement.setDouble(4, program.getAdditionalCharge());
-			preparedStatement.setInt(5, program.getMinutes());
+			preparedStatement.setInt(3, program.getMinutes());
+			preparedStatement.setDouble(4, program.getBaseCharge());
+			preparedStatement.setDouble(5, program.getAdditionalCharge());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getStackTrace());
+			System.out.println(e.getMessage());
 		}
 	}
 	

@@ -30,6 +30,8 @@ public class ClientDao {
 			+ "INNER JOIN program ON phone_number.programid=program.id;";
 	private static final String GET_NUM_BY_AFM_SQL = "SELECT phone_number FROM client WHERE afm = ?";
 	private static final String UPDATE_PROGRAM_SQL = "UPDATE phone_number SET programid = ? WHERE number = ?;";
+	private static final String UPDATE_BALANCE_SQL = "UPDATE client SET balance = ? WHERE username = ?;";
+	
 	
 
 	public ClientDao() {
@@ -185,6 +187,7 @@ public class ClientDao {
 	}
 
 	public void changeProgram(String clientAFM, int programId) {
+		System.out.println("yes");
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROGRAM_SQL);
 				PreparedStatement phoneNumStatement = connection.prepareStatement(GET_NUM_BY_AFM_SQL)) {
@@ -202,5 +205,21 @@ public class ClientDao {
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
+	}
+
+	public Double getBallance(String username) {
+		return setClient(username).getBalance();
+	}
+
+	public void setBalance(String username, double double1) {
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BALANCE_SQL)){
+					preparedStatement.setDouble(1, double1);
+					preparedStatement.setString(2, username);
+					preparedStatement.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	}
 }

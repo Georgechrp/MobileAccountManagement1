@@ -57,23 +57,4 @@ public class User {
     public void setRole(int role) {
         this.role = role;
     }
-
-    // Μέθοδος εγγραφής νέου χρήστη
-    public void register() {
-        // Υλοποιήστε τη λειτουργία εγγραφής εδώ
-        System.out.println("Ο χρήστης " + username + " εγγράφηκε επιτυχώς.");
-    }
-
-    // Μέθοδος σύνδεσης χρήστη
-    public void login() {
-        // Υλοποιήστε τη λειτουργία σύνδεσης εδώ
-        System.out.println("Ο χρήστης " + username + " συνδέθηκε επιτυχώς.");
-    }
-
-    // Μέθοδος αποσύνδεσης χρήστη
-    public void logout() {
-        // Υλοποιήστε τη λειτουργία αποσύνδεσης εδώ
-        System.out.println("Ο χρήστης " + username + " αποσυνδέθηκε επιτυχώς.");
-    }
-
 }

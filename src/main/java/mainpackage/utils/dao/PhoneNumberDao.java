@@ -11,7 +11,7 @@ import mainpackage.utils.model.Program;
 public class PhoneNumberDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "root";
+	private String jdbcPassword = "L1ok3y20";
 
 	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number" 
 	+ "  (program_id,  phone_number) VALUES ( ?, ?); ";

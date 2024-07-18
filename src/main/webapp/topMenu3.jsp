@@ -16,7 +16,7 @@
             </form>
         </li>
         <li>
-            <form id="top" action="MatchClient.jsp" method="post">
+            <form id="top" action="<%=request.getContextPath()%>/SellerServlet" method="post">
                 <input class="top" type="submit" name="action" value="Match a client to a program">
             </form>
         </li>

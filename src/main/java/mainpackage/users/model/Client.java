@@ -4,12 +4,12 @@ import mainpackage.utils.model.PhoneNumber;
 
 public class Client extends User {
     private final String AFM;
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
     private Double balance;
-    public Client(String username, String name, String surname, String password, int role, String AFM, Double balance, String phoneNumber) {
+    public Client(String username, String name, String surname, String password, int role, String AFM, Double balance, PhoneNumber phoneNumber) {
         super(username, name, surname, password, role);
         this.AFM = AFM;
-        this.phoneNumber = phoneNumber;
+        setPhoneNumber(phoneNumber);
         this.balance = balance; // Αρχικό υπόλοιπο λογαριασμού
     }
 
@@ -17,11 +17,11 @@ public class Client extends User {
         return AFM;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -32,7 +32,4 @@ public class Client extends User {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-   
-    
-   
 }

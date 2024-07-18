@@ -17,7 +17,7 @@
    
 <div class="contentRegister">
 <form id="register-form" class="register-form" autocomplete="off" action="<%=request.getContextPath()%>/AdminServlet" method="post">
-<input type="hidden" name="action" value="register" />
+<input type="hidden" name="action" value="insert_program" />
   
   <div>
     <label class="name">

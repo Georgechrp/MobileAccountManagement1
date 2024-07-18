@@ -16,7 +16,7 @@
             </form>
         </li>
         <li>
-            <form id="top" action="EditPrograms.jsp" method="post">
+            <form id="top" action="<%=request.getContextPath()%>/AdminServlet" method="post">
                 <input class="top" type="submit" name="action" value="Edit Programs">
             </form>
         </li>

@@ -85,10 +85,10 @@ public class UserServlet extends HttpServlet {
 	
 	
 	public void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-		 HttpSession session = request.getSession(false);
-	        if (session != null) {
-	            session.invalidate(); // Invalidate the session
-	        }
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate(); // Invalidate the session
+		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
