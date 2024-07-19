@@ -2,7 +2,7 @@ package mainpackage.utils.model;
 
 public class Bill {
 	private String usernameOfClient;
-    private int billingMonth; // ο μήνας χρέωσης
+    private int billingMonth; // ΞΏ ΞΌΞ®Ξ½Ξ±Ο‚ Ο‡ΟΞ­Ο‰ΟƒΞ·Ο‚
     private int numberOfCalls;
     private final String bill_id;
     
@@ -46,5 +46,5 @@ public class Bill {
 		this.numberOfCalls = numberOfCalls;
 	}
 
-    // Άλλες μέθοδοι για τον υπολογισμό του συνολικού κόστους κλπ μπορούν να προστεθούν εδώ
+    // Ξ†Ξ»Ξ»ΞµΟ‚ ΞΌΞ­ΞΈΞΏΞ΄ΞΏΞΉ Ξ³ΞΉΞ± Ο„ΞΏΞ½ Ο…Ο€ΞΏΞ»ΞΏΞ³ΞΉΟƒΞΌΟ Ο„ΞΏΟ… ΟƒΟ…Ξ½ΞΏΞ»ΞΉΞΊΞΏΟ ΞΊΟΟƒΟ„ΞΏΟ…Ο‚ ΞΊΞ»Ο€ ΞΌΟ€ΞΏΟΞΏΟΞ½ Ξ½Ξ± Ο€ΟΞΏΟƒΟ„ΞµΞΈΞΏΟΞ½ ΞµΞ΄Ο
 }

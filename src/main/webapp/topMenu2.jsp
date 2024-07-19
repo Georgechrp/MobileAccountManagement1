@@ -15,11 +15,7 @@
                 <input class="top" type="submit" name="action" value="Call history">
             </form>
         </li>
-        <li>
-            <form id="top" action="<%=request.getContextPath()%>/ClientServlet" method="post">
-                <input class="top" type="submit" name="action" value="Pay bill">
-            </form>
-        </li>
+        
         <li>
             <form id="top" action="<%=request.getContextPath()%>/UserServlet" method="post">
                 <input class="top" type="submit" name="action" value="Logout">

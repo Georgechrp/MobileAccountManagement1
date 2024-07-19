@@ -14,14 +14,14 @@ import mainpackage.utils.model.Program;
 public class ClientDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_PHONENUMBER_SQL = "INSERT INTO phone_number (programid, number) VALUES (?, ?)";
 	private static final String INSERT_CLIENT_SQL = "INSERT INTO client (username, afm, balance, phone_number) VALUES (?, ?, ?, ?)";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM user WHERE username = ?;";
 	private static final String LOGIN_CLIENT_SQL = "SELECT * FROM client WHERE username = ?;";
-	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM programs WHERE id = ?";
+	private static final String PROGRAM_SQL = "SELECT id, name, minutes, baseCharge, additionalCharge FROM program WHERE id = ?";
 	private static final String GET_CLIENTS_SQL = "SELECT user.username, user.password, user.first_name, user.surname, user.role, client.afm,\r\n"
 			+ "client.balance, client.phone_number, phone_number.programid, program.name, program.minutes,\r\n"
 			+ "program.basecharge, program.additionalcharge FROM user\r\n"

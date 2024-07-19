@@ -12,7 +12,7 @@ import mainpackage.utils.model.Bill;
 public class BillDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_BILL_SQL = "INSERT INTO bill" 
 	+ "  (bill_id, username, number_of_calls, billing_month) VALUES (?, ?, ?, ?); ";

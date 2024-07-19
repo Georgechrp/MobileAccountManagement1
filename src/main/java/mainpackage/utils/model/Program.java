@@ -2,10 +2,10 @@ package mainpackage.utils.model;
 
 public class Program {
 	private int id;
-    private String name;//το όνομα του προγράμματος
-    private int minutes;// τα λεπτά ομιλίας που προσφέρονται
-    private double baseCharge;//το πάγιο κόστος του προγράμματος
-    private double additionalCharge;//το επιπλέον κόστος για χρέωση πέραν του παγίου.
+    private String name;//Ο„ΞΏ ΟΞ½ΞΏΞΌΞ± Ο„ΞΏΟ… Ο€ΟΞΏΞ³ΟΞ¬ΞΌΞΌΞ±Ο„ΞΏΟ‚
+    private int minutes;// Ο„Ξ± Ξ»ΞµΟ€Ο„Ξ¬ ΞΏΞΌΞΉΞ»Ξ―Ξ±Ο‚ Ο€ΞΏΟ… Ο€ΟΞΏΟƒΟ†Ξ­ΟΞΏΞ½Ο„Ξ±ΞΉ
+    private double baseCharge;//Ο„ΞΏ Ο€Ξ¬Ξ³ΞΉΞΏ ΞΊΟΟƒΟ„ΞΏΟ‚ Ο„ΞΏΟ… Ο€ΟΞΏΞ³ΟΞ¬ΞΌΞΌΞ±Ο„ΞΏΟ‚
+    private double additionalCharge;//Ο„ΞΏ ΞµΟ€ΞΉΟ€Ξ»Ξ­ΞΏΞ½ ΞΊΟΟƒΟ„ΞΏΟ‚ Ξ³ΞΉΞ± Ο‡ΟΞ­Ο‰ΟƒΞ· Ο€Ξ­ΟΞ±Ξ½ Ο„ΞΏΟ… Ο€Ξ±Ξ³Ξ―ΞΏΟ….
 
     public Program(int id, String name, int minutes, double baseCharge, double additionalCharge) {
         setId(id);

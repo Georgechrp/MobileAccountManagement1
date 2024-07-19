@@ -11,7 +11,7 @@
 <body>
  <div class="content">
         <h1>Welcome to the Call Center App for every company and their programs</h1>
-        <p>Hello, welcome to our app. Here you can register or login as a client or seller.mpla mpla</p>
+        <p>Hello, welcome to our app. Here you can register or login as a client or seller.</p>
     </div>	
 </body>
 </html>

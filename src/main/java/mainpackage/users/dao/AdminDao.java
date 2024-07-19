@@ -8,17 +8,17 @@ import java.sql.SQLException;
 import mainpackage.users.model.Admin;
 
 public class AdminDao {
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
+	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
-	private static final String INSERT_ADMIN_SQL = "INSERT INTO users" 
+	private static final String INSERT_ADMIN_SQL = "INSERT INTO user" 
 	+ "  (username, password, first_name, surname, role) VALUES (?, ?, ?, ?, ?); ";
 
 	protected Connection getConnection() {
 		Connection connection = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

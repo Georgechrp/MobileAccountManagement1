@@ -11,7 +11,7 @@ import mainpackage.utils.model.Call;
 public class CallDao {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_CALL_SQL = "INSERT INTO calls" 
 	+ "  (call_id, startTime, endTime, caller_phone_number, receiver_phone_number) VALUES (?, ?, ?, ?, ?); ";

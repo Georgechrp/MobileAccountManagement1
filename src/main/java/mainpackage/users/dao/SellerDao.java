@@ -11,7 +11,7 @@ import mainpackage.users.model.Seller;
 public class SellerDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/mobilemanagementdb";
 	private String jdbcUsername = "root";
-	private String jdbcPassword = "L1ok3y20";
+	private String jdbcPassword = "root";
 
 	private static final String INSERT_USER_SQL = "INSERT INTO user (username, first_name, surname, password, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SELLER_SQL = "INSERT INTO seller (username, company) VALUES (?, ?)";

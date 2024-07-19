@@ -54,7 +54,7 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Attempting login for user: " + username);
 		int role = userDao.login(username,hashedPassword);
 		if (role == 2) {
-			clientDao.setClient(username);
+			//clientDao.setClient(username);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ClientMain.jsp");
@@ -85,6 +85,12 @@ public class UserServlet extends HttpServlet {
 			response.sendRedirect("LoginPage.jsp");
 		}
 	}
+	 private void clearBrowserCache(HttpServletResponse response) {
+	        // Προσθήκη κεφαλίδων HTTP για να διασφαλιστεί ο καθαρισμός της cache του προγράμματος περιήγησης
+	        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+	        response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	        response.setDateHeader("Expires", 0); // Proxies
+	    }
 	
 	
 	public void logout (HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -92,7 +98,10 @@ public class UserServlet extends HttpServlet {
 		if (session != null) {
 			session.invalidate(); // Invalidate the session
 		}
+		
+		clearBrowserCache(response);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
+		
 	}
 }

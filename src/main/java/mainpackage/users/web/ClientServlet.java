@@ -58,7 +58,7 @@ public class ClientServlet extends HttpServlet {
 	                case "My Bill":
 	                    viewAccount(request, response);
 	                    break;
-		            case "Pay bill":
+		            case "payBill":
 	                    payBill(request, response);
 	                    break;
 		            case "Call history":

@@ -19,7 +19,7 @@
     <%
         } else {
     %>
-    <p>Please <a href="login.jsp">login</a>.</p>
+    <p>Please <a href="LoginPage.jsp">login</a>.</p>
     <%
         }
     %>

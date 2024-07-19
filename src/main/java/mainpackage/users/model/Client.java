@@ -10,7 +10,7 @@ public class Client extends User {
         super(username, name, surname, password, role);
         this.AFM = AFM;
         setPhoneNumber(phoneNumber);
-        this.balance = balance; // Αρχικό υπόλοιπο λογαριασμού
+        this.balance = balance; // Ξ‘ΟΟ‡ΞΉΞΊΟ Ο…Ο€ΟΞ»ΞΏΞΉΟ€ΞΏ Ξ»ΞΏΞ³Ξ±ΟΞΉΞ±ΟƒΞΌΞΏΟ
     }
 
     public String getAFM() {

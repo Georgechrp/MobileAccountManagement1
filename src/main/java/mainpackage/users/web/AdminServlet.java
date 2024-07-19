@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,10 +44,10 @@ public class AdminServlet extends HttpServlet {
 
 		try {
 			switch (action) {
-			case "insert_admin":
+			case "registerAdmin":
 				insertAdmin(request, response);
 				break;
-			case "insert_client":
+			case "insertAdminClient":
 				insertClient(request, response);
 				break;
 			case "insert_seller":
@@ -61,14 +62,14 @@ public class AdminServlet extends HttpServlet {
 			case "insert_program":
 				insertProgram(request, response);	
 				break;
-			case "edit_program":
-				editProgram(request,response);
-				break;
 			case "delete_user":
 				deleteUser(request, response);
 				break;
 			case "Edit Programs":
 				showPrograms(request, response);
+				break;
+			case "edit_programs":
+				editProgram(request, response);
 				break;
 			default:
 				//listUser(request, response);
@@ -81,10 +82,10 @@ public class AdminServlet extends HttpServlet {
 	
 	private void insertAdmin(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
+		String username = request.getParameter("username");
+		String name = request.getParameter("first_name");
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
 		int role = 1;
 		String hashedPassword = Ipassword.hashPassword(password);
 		Admin newAdmin = new Admin(username, name, surname, hashedPassword, role);
@@ -93,19 +94,20 @@ public class AdminServlet extends HttpServlet {
 	}
 	
 	private void insertClient(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		String username = request.getParameter("name");
-		String name = request.getParameter("name");
-		String surname = request.getParameter("name");
-		String password = request.getParameter("name");
+			throws SQLException, IOException, ServletException {
+		String username = request.getParameter("username");
+		String name = request.getParameter("first_name"); // Correct parameter name
+		String surname = request.getParameter("surname");
+		String password = request.getParameter("password");
+		String AFM = request.getParameter("afm");
+		Double balance = 0.0; // Initialize balance to 0.0 as it's not provided in the form
+		PhoneNumber phoneNumber = new PhoneNumber(request.getParameter("phone_number"), null); // Correct parameter name
 		int role = 2;
-		String AFM = request.getParameter("AFM");
-		Double balance = Double.parseDouble(request.getParameter("balance"));
-		PhoneNumber PhoneNumber = new PhoneNumber(request.getParameter("phonenumber"), null);
 		String hashedPassword = Ipassword.hashPassword(password);
-		Client newClient = new Client(username, name, surname, hashedPassword, role, AFM, balance, PhoneNumber);
+		Client newClient = new Client(username, name, surname, hashedPassword, role, AFM, balance, phoneNumber);
 		clientDao.insertClient(newClient);
-		response.sendRedirect("AdminMain.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("AdminMain.jsp");
+	    dispatcher.forward(request, response);
 	}
 	
 	private void insertSeller(HttpServletRequest request, HttpServletResponse response) 
@@ -158,16 +160,17 @@ public class AdminServlet extends HttpServlet {
 	}
 	
 	private void editProgram(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-	    double baseCharge = Double.parseDouble(request.getParameter("baseCharge"));
-	    // Fetch the existing program
-	    Program program = programDao.getProgramById(id);
-	    // Update the base charge
-	    program.setBaseCharge(baseCharge);
-	    // Persist the updated program
-	    programDao.editProgram(program);
-	    response.sendRedirect("EditPrograms.jsp"); 
+			throws SQLException, IOException, ServletException {
+		 	int id = Integer.parseInt(request.getParameter("id"));
+	        String name = request.getParameter("name");
+	        int minutes = Integer.parseInt(request.getParameter("minutes"));
+	        double baseCharge = Double.parseDouble(request.getParameter("baseCharge"));
+	        double additionalCharge = Double.parseDouble(request.getParameter("additionalCharge"));
+
+	        Program program = new Program(id, name, minutes, baseCharge, additionalCharge);
+	        programDao.editProgram(program);
+	        showPrograms(request, response);
+	     
 	}
 	
 	private void showPrograms(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {

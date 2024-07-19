@@ -1,21 +1,21 @@
 package mainpackage.users.model;
 
 public class User {
-    // Χαρακτηριστικά της κλάσης Users
+    // Ξ§Ξ±ΟΞ±ΞΊΟ„Ξ·ΟΞΉΟƒΟ„ΞΉΞΊΞ¬ Ο„Ξ·Ο‚ ΞΊΞ»Ξ¬ΟƒΞ·Ο‚ Users
     private String username;
     private String name;
     private String surname;
     private String password;
-    private int role; // Ιδιότητα: client, seller, administrator
+    private int role; // Ξ™Ξ΄ΞΉΟΟ„Ξ·Ο„Ξ±: client, seller, administrator
 
-    // Constructor της κλάσης Users
+    // Constructor Ο„Ξ·Ο‚ ΞΊΞ»Ξ¬ΟƒΞ·Ο‚ Users
     public User(String username, String name, String surname, String password, int role) {
         setUsername(username);
         setName(name);
         setSurname(surname);
         setRole(role);
         setPassword(password);
-        // Αύξηση του μετρητή κατά ένα κάθε φορά που καλείται ο constructor
+        // Ξ‘ΟΞΎΞ·ΟƒΞ· Ο„ΞΏΟ… ΞΌΞµΟ„ΟΞ·Ο„Ξ® ΞΊΞ±Ο„Ξ¬ Ξ­Ξ½Ξ± ΞΊΞ¬ΞΈΞµ Ο†ΞΏΟΞ¬ Ο€ΞΏΟ… ΞΊΞ±Ξ»ΞµΞ―Ο„Ξ±ΞΉ ΞΏ constructor
     }
 
     public String getUsername() {
